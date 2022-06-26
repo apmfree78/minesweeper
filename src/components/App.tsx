@@ -4,6 +4,30 @@ import Controls from './Controls';
 import Board from './gameBoard';
 import { drumSounds, soundLookup } from '../drum-data';
 
+const N: number = 5; //size of board , NxN
+const difficulty: string = 'easy'; // diffculting of game, determines % of mines
+
+// the gameBoard is that create the gameBoard
+// this contains following functions
+/* 
+  // define methods
+  // return of location x, y has a bomb
+  hasMine(x: number, y: number): boolean
+ 
+  // return initial state of game, NxN boolean matrix
+  // if cell is hidden => false, if cell is visible => true
+  // because this is initial state all cells are FALSE (hidden)
+  getInitialState(): boolean[][]
+
+  // number of adjacent cells that contain mines
+  adjacentMines(x: number, y: number): number 
+
+  // total number of mines on the board
+  totalMineCount() 
+ */
+const gameBoard: Board = new Board(N, difficulty);
+type Game = boolean[][];
+
 interface Sound {
   name: string;
   file: string;
@@ -20,14 +44,8 @@ interface TrackIndex {
 }
 
 const App: React.FC = () => {
-  /*  useState hooks...
-    sounds: drumSounds, //object containing all drum sound data
-    currentSound: {}, //current sound that was played
-    trackIndex: soundLookup, //key value index to quickly look up drum sound by track and letter
-    power: true, //on/off switch
-    track: 0, //which track is being displayed, 0 or 1
-    volume: 20, //volume level going form 0 to 100 (max)
-  }; */
+  const [gameState, setGameState] = useState<Game>(gameBoard.getInitialState());
+
   const [sounds, setSounds] = useState<Sounds>(drumSounds);
   const [currentSound, setCurrentSound] = useState<Sound>({
     name: '',

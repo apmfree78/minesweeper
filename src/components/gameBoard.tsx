@@ -25,6 +25,12 @@ export default class Board {
     // calculating number of bombs on minefield
     this.numberOfMines = N * frequency;
 
+    // initializing adjacent mine arrays to zero before placing mines
+    for (let i = 0; i < N; i++) {
+      for (let j = 0; j < N; j++) {
+        this.gameBoard[i][j].adjacentMines = 0;
+      }
+    }
     // initialing gameBoard with Mines locations
     // true => cell contains Mines, false = cell is clear
     // all setting gameInitalState =>
@@ -35,26 +41,10 @@ export default class Board {
         if (Math.random() < frequency) {
           this.gameBoard[i][j].hasMine = true;
           // updating surrounding mine count
-          if (i < N - 1) {
-            if (!this.gameBoard[i + 1][j].adjacentMines)
-              this.gameBoard[i + 1][j].adjacentMines = 0;
-            this.gameBoard[i + 1][j].adjacentMines++;
-          }
-          if (i > 0) {
-            if (!this.gameBoard[i - 1][j].adjacentMines)
-              this.gameBoard[i - 1][j].adjacentMines = 0;
-            this.gameBoard[i - 1][j].adjacentMines++;
-          }
-          if (j < N - 1) {
-            if (!this.gameBoard[i][j + 1].adjacentMines)
-              this.gameBoard[i][j + 1].adjacentMines = 0;
-            this.gameBoard[i][j + 1].adjacentMines++;
-          }
-          if (j > 0) {
-            if (!this.gameBoard[i][j - 1].adjacentMines)
-              this.gameBoard[i][j - 1].adjacentMines = 0;
-            this.gameBoard[i][j - 1].adjacentMines++;
-          }
+          if (i < N - 1) this.gameBoard[i + 1][j].adjacentMines++;
+          if (i > 0) this.gameBoard[i - 1][j].adjacentMines++;
+          if (j < N - 1) this.gameBoard[i][j + 1].adjacentMines++;
+          if (j > 0) this.gameBoard[i][j - 1].adjacentMines++;
         } else this.gameBoard[i][j].hasMine = false;
         // setting gameInitialState to all false
         this.intialGameState[i][j] = false;
@@ -69,7 +59,7 @@ export default class Board {
   }
 
   // return intial state of board , NxN boolean matrix
-  // where all elements are false
+  // where all elements are false (ie hidden)
   getInitialState(): boolean[][] {
     return this.intialGameState;
   }
