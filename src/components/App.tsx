@@ -45,6 +45,7 @@ interface TrackIndex {
 
 const App: React.FC = () => {
   const [gameState, setGameState] = useState<Game>(gameBoard.getInitialState());
+  const [gameOver, setGameOver] = useState<boolean>(false);
 
   const [sounds, setSounds] = useState<Sounds>(drumSounds);
   const [currentSound, setCurrentSound] = useState<Sound>({
@@ -57,6 +58,57 @@ const App: React.FC = () => {
   const [power, setPower] = useState<number | boolean>(true);
   const [track, setTrack] = useState<number | boolean>(0);
   const [volume, setVolume] = useState<number>(20);
+
+  // update state by setting gameState[x][y] === true;
+  /*   function setCelltoTrue(x: number, y: number): void {
+    const newGameState = JSON.parse(JSON.stringify(gameState));
+    newGameState[x][y] = true; //this cell is now revealed! :)
+    setGameState(newGameState);
+  } */
+
+  // recursive function to reveal each neighor that does not contain
+  // a bomb. Neighbor is cell is that left right or below above
+  function setNeighborsToTrue(i: number, j: number, state: Game): void {
+    if (i < N - 1 && !gameBoard.hasMine(i + 1, j)) {
+      state[i + 1][j] = true;
+      setNeighborsToTrue(i + 1, j, state);
+    }
+
+    if (i > 0 && !gameBoard.hasMine(i - 1, j)) {
+      state[i - 1][j] = true;
+      setNeighborsToTrue(i + 1, j, state);
+    }
+
+    if (j < N - 1 && !gameBoard.hasMine(i, j + 1)) {
+      state[i][j + 1] = true;
+      setNeighborsToTrue(i + 1, j, state);
+    }
+
+    if (j > 0 && !gameBoard.hasMine(i, j - 1)) {
+      state[i][j - 1] = true;
+      setNeighborsToTrue(i + 1, j, state);
+    }
+  }
+
+  function revealCell(x: number, y: number): void {
+    // checking to make sure cell is not revealed
+    if (!gameState[x][y]) {
+      // checking if there is a mine
+      if (gameBoard.hasMine(x, y)) {
+        setGameOver(true);
+      } else {
+        // no bomb found , PLEW!
+        // revealing cell
+        const newGameState = JSON.parse(JSON.stringify(gameState));
+        newGameState[x][y] = true; //this cell is now revealed! :)
+        //set neighboring cells that have no bombs to true
+        // this function will change new game state with updated
+        // state with all revealed cells (ie cells set to true)
+        setNeighborsToTrue(x, y, newGameState);
+        setGameState(newGameState);
+      }
+    }
+  }
 
   //function that takes button the button input 'index'
   //and then plays corresponding sound
