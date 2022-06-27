@@ -1,10 +1,12 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import KeyPad from './KeyPad';
 import Controls from './Controls';
 import Board from './gameBoard';
 import { drumSounds, soundLookup } from '../drum-data';
 
-const N: number = 5; //size of board , NxN
+//size of board , Nx x Ny
+const Nx: number = 5;
+const Ny: number = 5;
 const difficulty: string = 'easy'; // diffculting of game, determines % of mines
 
 // the gameBoard is that create the gameBoard
@@ -25,7 +27,7 @@ const difficulty: string = 'easy'; // diffculting of game, determines % of mines
   // total number of mines on the board
   totalMineCount() 
  */
-const gameBoard: Board = new Board(N, difficulty);
+const gameBoard: Board = new Board(Nx, Ny, difficulty);
 type Game = boolean[][];
 
 interface Sound {
@@ -67,26 +69,70 @@ const App: React.FC = () => {
   } */
 
   // recursive function to reveal each neighor that does not contain
-  // a bomb. Neighbor is cell is that left right or below above
-  function setNeighborsToTrue(i: number, j: number, state: Game): void {
-    if (i < N - 1 && !gameBoard.hasMine(i + 1, j)) {
+  // a bomb. Neighbors are ALL surround cells
+  function revealNeighbors(i: number, j: number, state: Game): void {
+    if (i < Nx - 1 && !gameBoard.hasMine(i + 1, j) && !state[i + 1][j]) {
       state[i + 1][j] = true;
-      setNeighborsToTrue(i + 1, j, state);
+      if (gameBoard.adjacentMines(i + 1, j) === 0)
+        revealNeighbors(i + 1, j, state);
     }
 
-    if (i > 0 && !gameBoard.hasMine(i - 1, j)) {
+    if (i > 0 && !gameBoard.hasMine(i - 1, j) && !state[i - 1][j]) {
       state[i - 1][j] = true;
-      setNeighborsToTrue(i + 1, j, state);
+      if (gameBoard.adjacentMines(i - 1, j) === 0)
+        revealNeighbors(i - 1, j, state);
     }
 
-    if (j < N - 1 && !gameBoard.hasMine(i, j + 1)) {
+    if (j < Ny - 1 && !gameBoard.hasMine(i, j + 1) && !state[i][j + 1]) {
       state[i][j + 1] = true;
-      setNeighborsToTrue(i + 1, j, state);
+      if (gameBoard.adjacentMines(i, j + 1) === 0)
+        revealNeighbors(i, j + 1, state);
+    }
+    if (j > 0 && !gameBoard.hasMine(i, j - 1) && !state[i][j - 1]) {
+      state[i][j - 1] = true;
+      if (gameBoard.adjacentMines(i, j - 1) === 0)
+        revealNeighbors(i, j - 1, state);
     }
 
-    if (j > 0 && !gameBoard.hasMine(i, j - 1)) {
-      state[i][j - 1] = true;
-      setNeighborsToTrue(i + 1, j, state);
+    if (
+      i < Nx - 1 &&
+      j > 0 &&
+      !gameBoard.hasMine(i + 1, j - 1) &&
+      !state[i + 1][j - 1]
+    ) {
+      state[i + 1][j - 1] = true;
+      if (gameBoard.adjacentMines(i + 1, j - 1) === 0)
+        revealNeighbors(i + 1, j - 1, state);
+    }
+    if (
+      i > 0 &&
+      j > 0 &&
+      !gameBoard.hasMine(i - 1, j - 1) &&
+      !state[i - 1][j - 1]
+    ) {
+      state[i - 1][j - 1] = true;
+      if (gameBoard.adjacentMines(i - 1, j - 1) === 0)
+        revealNeighbors(i - 1, j - 1, state);
+    }
+    if (
+      i > 0 &&
+      j < Ny - 1 &&
+      !gameBoard.hasMine(i - 1, j + 1) &&
+      !state[i - 1][j + 1]
+    ) {
+      state[i - 1][j + 1] = true;
+      if (gameBoard.adjacentMines(i - 1, j + 1) === 0)
+        revealNeighbors(i - 1, j + 1, state);
+    }
+    if (
+      i < Nx - 1 &&
+      j < Ny - 1 &&
+      !gameBoard.hasMine(i + 1, j + 1) &&
+      !state[i + 1][j + 1]
+    ) {
+      state[i + 1][j + 1] = true;
+      if (gameBoard.adjacentMines(i + 1, j + 1) === 0)
+        revealNeighbors(i + 1, j + 1, state);
     }
   }
 
@@ -104,7 +150,8 @@ const App: React.FC = () => {
         //set neighboring cells that have no bombs to true
         // this function will change new game state with updated
         // state with all revealed cells (ie cells set to true)
-        setNeighborsToTrue(x, y, newGameState);
+        if (gameBoard.adjacentMines(x, y) === 0)
+          revealNeighbors(x, y, newGameState);
         setGameState(newGameState);
       }
     }
@@ -156,30 +203,6 @@ const App: React.FC = () => {
     //set state
     setVolume(_volume);
   };
-
-  //handling keyboard events
-  useEffect(() => {
-    //adding event listenor to catch keystrokes and
-    //play drumbeat if matche with certain letters
-
-    type KeyHandler = { (event: KeyboardEventInit): void };
-
-    const keyHandler: KeyHandler = (event: KeyboardEventInit): void => {
-      if (event?.key) {
-        const letter: string = event?.key.toUpperCase();
-        const keys: string = 'QWEASDZSCX';
-        if (keys.includes(letter)) playDrumSound(letter);
-      }
-    };
-
-    //listening for event
-    window.addEventListener('keydown', keyHandler);
-
-    //clearing event
-    return () => {
-      window.removeEventListener('keydown', keyHandler);
-    };
-  });
 
   return (
     <div
