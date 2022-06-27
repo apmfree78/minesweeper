@@ -26,6 +26,11 @@ const difficulty: string = 'easy'; // diffculting of game, determines % of mines
 
   // total number of mines on the board
   totalMineCount() 
+
+ // recursive function to reveal each neighor that does not contain
+  // a bomb. Neighbors are ALL surround cells
+  revealNeighbors(i: number, j: number, state: Game, boardState: Board): void 
+
  */
 const gameBoard: Board = new Board(Nx, Ny, difficulty);
 type Game = boolean[][];
@@ -61,81 +66,6 @@ const App: React.FC = () => {
   const [track, setTrack] = useState<number | boolean>(0);
   const [volume, setVolume] = useState<number>(20);
 
-  // update state by setting gameState[x][y] === true;
-  /*   function setCelltoTrue(x: number, y: number): void {
-    const newGameState = JSON.parse(JSON.stringify(gameState));
-    newGameState[x][y] = true; //this cell is now revealed! :)
-    setGameState(newGameState);
-  } */
-
-  // recursive function to reveal each neighor that does not contain
-  // a bomb. Neighbors are ALL surround cells
-  function revealNeighbors(i: number, j: number, state: Game): void {
-    if (i < Nx - 1 && !gameBoard.hasMine(i + 1, j) && !state[i + 1][j]) {
-      state[i + 1][j] = true;
-      if (gameBoard.adjacentMines(i + 1, j) === 0)
-        revealNeighbors(i + 1, j, state);
-    }
-
-    if (i > 0 && !gameBoard.hasMine(i - 1, j) && !state[i - 1][j]) {
-      state[i - 1][j] = true;
-      if (gameBoard.adjacentMines(i - 1, j) === 0)
-        revealNeighbors(i - 1, j, state);
-    }
-
-    if (j < Ny - 1 && !gameBoard.hasMine(i, j + 1) && !state[i][j + 1]) {
-      state[i][j + 1] = true;
-      if (gameBoard.adjacentMines(i, j + 1) === 0)
-        revealNeighbors(i, j + 1, state);
-    }
-    if (j > 0 && !gameBoard.hasMine(i, j - 1) && !state[i][j - 1]) {
-      state[i][j - 1] = true;
-      if (gameBoard.adjacentMines(i, j - 1) === 0)
-        revealNeighbors(i, j - 1, state);
-    }
-
-    if (
-      i < Nx - 1 &&
-      j > 0 &&
-      !gameBoard.hasMine(i + 1, j - 1) &&
-      !state[i + 1][j - 1]
-    ) {
-      state[i + 1][j - 1] = true;
-      if (gameBoard.adjacentMines(i + 1, j - 1) === 0)
-        revealNeighbors(i + 1, j - 1, state);
-    }
-    if (
-      i > 0 &&
-      j > 0 &&
-      !gameBoard.hasMine(i - 1, j - 1) &&
-      !state[i - 1][j - 1]
-    ) {
-      state[i - 1][j - 1] = true;
-      if (gameBoard.adjacentMines(i - 1, j - 1) === 0)
-        revealNeighbors(i - 1, j - 1, state);
-    }
-    if (
-      i > 0 &&
-      j < Ny - 1 &&
-      !gameBoard.hasMine(i - 1, j + 1) &&
-      !state[i - 1][j + 1]
-    ) {
-      state[i - 1][j + 1] = true;
-      if (gameBoard.adjacentMines(i - 1, j + 1) === 0)
-        revealNeighbors(i - 1, j + 1, state);
-    }
-    if (
-      i < Nx - 1 &&
-      j < Ny - 1 &&
-      !gameBoard.hasMine(i + 1, j + 1) &&
-      !state[i + 1][j + 1]
-    ) {
-      state[i + 1][j + 1] = true;
-      if (gameBoard.adjacentMines(i + 1, j + 1) === 0)
-        revealNeighbors(i + 1, j + 1, state);
-    }
-  }
-
   function revealCell(x: number, y: number): void {
     // checking to make sure cell is not revealed
     if (!gameState[x][y]) {
@@ -151,7 +81,7 @@ const App: React.FC = () => {
         // this function will change new game state with updated
         // state with all revealed cells (ie cells set to true)
         if (gameBoard.adjacentMines(x, y) === 0)
-          revealNeighbors(x, y, newGameState);
+          gameBoard.revealNeighbors(x, y, newGameState);
         setGameState(newGameState);
       }
     }

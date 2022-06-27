@@ -4,9 +4,14 @@ interface Cell {
 }
 
 type Cells = Cell[][];
+type Game = boolean[][];
 
 export default class Board {
   numberOfMines: number; // number of mines on board
+
+  // x and y dimensions
+  xDim: number;
+  yDim: number;
 
   // gameBoard is double array containing all Cells of game
   // where each Cell contains the 3 fields defined in interface Cell
@@ -17,6 +22,10 @@ export default class Board {
 
   constructor(Nx: number, Ny: number, difficulty: string = 'easy') {
     let frequency: number = 0.1; // easy frequency setting
+
+    // setting board dimensions
+    this.xDim = Nx;
+    this.yDim = Ny;
 
     //checking if there is higher difficulting setting
     if (difficulty === 'medium') frequency = 0.15;
@@ -77,5 +86,67 @@ export default class Board {
   // total number of mines on the board
   totalMineCount() {
     return this.numberOfMines;
+  }
+
+  // recursive function to reveal each neighor that does not contain
+  // a bomb. Neighbors are ALL surround cells
+  revealNeighbors(i: number, j: number, state: Game): void {
+    if (i < this.xDim - 1 && !this.hasMine(i + 1, j) && !state[i + 1][j]) {
+      state[i + 1][j] = true;
+      if (this.adjacentMines(i + 1, j) === 0)
+        this.revealNeighbors(i + 1, j, state);
+    }
+
+    if (i > 0 && !this.hasMine(i - 1, j) && !state[i - 1][j]) {
+      state[i - 1][j] = true;
+      if (this.adjacentMines(i - 1, j) === 0)
+        this.revealNeighbors(i - 1, j, state);
+    }
+
+    if (j < this.yDim - 1 && this.hasMine(i, j + 1) && !state[i][j + 1]) {
+      state[i][j + 1] = true;
+      if (this.adjacentMines(i, j + 1) === 0)
+        this.revealNeighbors(i, j + 1, state);
+    }
+    if (j > 0 && !this.hasMine(i, j - 1) && !state[i][j - 1]) {
+      state[i][j - 1] = true;
+      if (this.adjacentMines(i, j - 1) === 0)
+        this.revealNeighbors(i, j - 1, state);
+    }
+    if (
+      i < this.xDim - 1 &&
+      j > 0 &&
+      !this.hasMine(i + 1, j - 1) &&
+      !state[i + 1][j - 1]
+    ) {
+      state[i + 1][j - 1] = true;
+      if (this.adjacentMines(i + 1, j - 1) === 0)
+        this.revealNeighbors(i + 1, j - 1, state);
+    }
+    if (i > 0 && j > 0 && !this.hasMine(i - 1, j - 1) && !state[i - 1][j - 1]) {
+      state[i - 1][j - 1] = true;
+      if (this.adjacentMines(i - 1, j - 1) === 0)
+        this.revealNeighbors(i - 1, j - 1, state);
+    }
+    if (
+      i > 0 &&
+      j < this.yDim - 1 &&
+      !this.hasMine(i - 1, j + 1) &&
+      !state[i - 1][j + 1]
+    ) {
+      state[i - 1][j + 1] = true;
+      if (this.adjacentMines(i - 1, j + 1) === 0)
+        this.revealNeighbors(i - 1, j + 1, state);
+    }
+    if (
+      i < this.xDim - 1 &&
+      j < this.yDim - 1 &&
+      !this.hasMine(i + 1, j + 1) &&
+      !state[i + 1][j + 1]
+    ) {
+      state[i + 1][j + 1] = true;
+      if (this.adjacentMines(i + 1, j + 1) === 0)
+        this.revealNeighbors(i + 1, j + 1, state);
+    }
   }
 }
