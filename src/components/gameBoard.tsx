@@ -60,15 +60,6 @@ export default class Board {
             if (x > 0 && y > 0 && x < Nx - 1 && y < Ny - 1)
               this.gameBoard[x][y].adjacentMines++;
           }
-          /*           if (i < Nx - 1) this.gameBoard[i + 1][j].adjacentMines++;
-          if (i > 0) this.gameBoard[i - 1][j].adjacentMines++;
-          if (j < Ny - 1) this.gameBoard[i][j + 1].adjacentMines++;
-          if (j > 0) this.gameBoard[i][j - 1].adjacentMines++;
-          if (i < Nx - 1 && j < Ny - 1)
-            this.gameBoard[i + 1][j + 1].adjacentMines++;
-          if (i < Nx - 1 && j > 0) this.gameBoard[i + 1][j - 1].adjacentMines++;
-          if (i > 0 && j < Ny - 1) this.gameBoard[i - 1][j + 1].adjacentMines++;
-          if (i > 0 && j > 0) this.gameBoard[i - 1][j - 1].adjacentMines++; */
         } else this.gameBoard[i][j].hasMine = false;
         // setting gameInitialState to all false
         this.intialGameState[i][j] = false;
@@ -115,62 +106,21 @@ export default class Board {
   // recursive function to reveal each neighor that does not contain
   // a bomb. Neighbors are ALL surround cells
   revealNeighbors(i: number, j: number, state: Game): void {
-    if (i < this.xDim - 1 && !this.hasMine(i + 1, j) && !state[i + 1][j]) {
-      state[i + 1][j] = true;
-      if (this.adjacentMines(i + 1, j) === 0)
-        this.revealNeighbors(i + 1, j, state);
-    }
+    // determine surround coordinates of cell i,j
+    const surroundingCells: number[][] = this.surroundingCellCoordinates(i, j);
 
-    if (i > 0 && !this.hasMine(i - 1, j) && !state[i - 1][j]) {
-      state[i - 1][j] = true;
-      if (this.adjacentMines(i - 1, j) === 0)
-        this.revealNeighbors(i - 1, j, state);
-    }
-
-    if (j < this.yDim - 1 && this.hasMine(i, j + 1) && !state[i][j + 1]) {
-      state[i][j + 1] = true;
-      if (this.adjacentMines(i, j + 1) === 0)
-        this.revealNeighbors(i, j + 1, state);
-    }
-    if (j > 0 && !this.hasMine(i, j - 1) && !state[i][j - 1]) {
-      state[i][j - 1] = true;
-      if (this.adjacentMines(i, j - 1) === 0)
-        this.revealNeighbors(i, j - 1, state);
-    }
-    if (
-      i < this.xDim - 1 &&
-      j > 0 &&
-      !this.hasMine(i + 1, j - 1) &&
-      !state[i + 1][j - 1]
-    ) {
-      state[i + 1][j - 1] = true;
-      if (this.adjacentMines(i + 1, j - 1) === 0)
-        this.revealNeighbors(i + 1, j - 1, state);
-    }
-    if (i > 0 && j > 0 && !this.hasMine(i - 1, j - 1) && !state[i - 1][j - 1]) {
-      state[i - 1][j - 1] = true;
-      if (this.adjacentMines(i - 1, j - 1) === 0)
-        this.revealNeighbors(i - 1, j - 1, state);
-    }
-    if (
-      i > 0 &&
-      j < this.yDim - 1 &&
-      !this.hasMine(i - 1, j + 1) &&
-      !state[i - 1][j + 1]
-    ) {
-      state[i - 1][j + 1] = true;
-      if (this.adjacentMines(i - 1, j + 1) === 0)
-        this.revealNeighbors(i - 1, j + 1, state);
-    }
-    if (
-      i < this.xDim - 1 &&
-      j < this.yDim - 1 &&
-      !this.hasMine(i + 1, j + 1) &&
-      !state[i + 1][j + 1]
-    ) {
-      state[i + 1][j + 1] = true;
-      if (this.adjacentMines(i + 1, j + 1) === 0)
-        this.revealNeighbors(i + 1, j + 1, state);
+    for (const [x, y] of surroundingCells) {
+      if (
+        x > 0 &&
+        y > 0 &&
+        x < this.xDim - 1 &&
+        y < this.yDim - 1 &&
+        !this.hasMine(x, y) &&
+        !state[x][y]
+      ) {
+        state[x][y] = true;
+        if (this.adjacentMines(x, y) === 0) this.revealNeighbors(x, y, state);
+      }
     }
   }
 }
