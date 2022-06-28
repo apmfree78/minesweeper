@@ -46,11 +46,21 @@ export default class Board {
     // true => cell is revealed, false => cell is hidden
     for (let i = 0; i < Nx; i++) {
       for (let j = 0; j < Ny; j++) {
+        // determine surround coordinates of cell i,j
+        const surroundingCells: number[][] = this.surroundingCellCoordinates(
+          i,
+          j
+        );
+
         // placing mines on gameBoard
         if (Math.random() < frequency) {
           this.gameBoard[i][j].hasMine = true;
           // updating surrounding mine count
-          if (i < Nx - 1) this.gameBoard[i + 1][j].adjacentMines++;
+          for (const [x, y] of surroundingCells) {
+            if (x > 0 && y > 0 && x < Nx - 1 && y < Ny - 1)
+              this.gameBoard[x][y].adjacentMines++;
+          }
+          /*           if (i < Nx - 1) this.gameBoard[i + 1][j].adjacentMines++;
           if (i > 0) this.gameBoard[i - 1][j].adjacentMines++;
           if (j < Ny - 1) this.gameBoard[i][j + 1].adjacentMines++;
           if (j > 0) this.gameBoard[i][j - 1].adjacentMines++;
@@ -58,13 +68,27 @@ export default class Board {
             this.gameBoard[i + 1][j + 1].adjacentMines++;
           if (i < Nx - 1 && j > 0) this.gameBoard[i + 1][j - 1].adjacentMines++;
           if (i > 0 && j < Ny - 1) this.gameBoard[i - 1][j + 1].adjacentMines++;
-          if (i > 0 && j > 0) this.gameBoard[i - 1][j - 1].adjacentMines++;
+          if (i > 0 && j > 0) this.gameBoard[i - 1][j - 1].adjacentMines++; */
         } else this.gameBoard[i][j].hasMine = false;
         // setting gameInitialState to all false
         this.intialGameState[i][j] = false;
       }
     }
   }
+
+  // return surround cell coordinates of cell x, y
+  surroundingCellCoordinates = (x: number, y: number): number[][] => {
+    return [
+      [x + 1, y + 1],
+      [x, y + 1],
+      [x + 1, y],
+      [x - 1, y - 1],
+      [x, y - 1],
+      [x - 1, y],
+      [x + 1, y - 1],
+      [x - 1, y + 1],
+    ];
+  };
 
   // define methods
   // return of location x, y has a bomb
