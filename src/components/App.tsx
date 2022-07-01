@@ -4,6 +4,7 @@ import Controls from './Controls';
 import Board from './gameBoard';
 import styled, { StyledComponent } from 'styled-components';
 import { drumSounds, soundLookup } from '../drum-data';
+import GameCell from './GameCell';
 
 //size of board , Nx x Ny
 const Nx: number = 5;
@@ -36,7 +37,7 @@ const difficulty: string = 'easy'; // diffculting of game, determines % of mines
 const gameBoard: Board = new Board(Nx, Ny, difficulty);
 type Game = boolean[][];
 
-const gameGrid: StyledComponent<'div', any, {}, never> = styled.div`
+const GameGrid: StyledComponent<'div', any, {}, never> = styled.div`
   display: grid;
   grid-template-rows: repeat(${Nx}, 1fr);
   grid-template-columns: repeat(${Ny}, 1fr);
@@ -148,23 +149,27 @@ const App: React.FC = () => {
     <div
       id='drum-machine'
       className='container d-flex align-items-center justify-content-center'>
-      <div id='display' className='d-flex'>
-        <div className='flex-row'>
-          <KeyPad playDrumSound={playDrumSound}>W</KeyPad>
-          <KeyPad playDrumSound={playDrumSound}>E</KeyPad>
-          <KeyPad playDrumSound={playDrumSound}>Q</KeyPad>
-        </div>
-        <div className='flex-row'>
-          <KeyPad playDrumSound={playDrumSound}>A</KeyPad>
-          <KeyPad playDrumSound={playDrumSound}>S</KeyPad>
-          <KeyPad playDrumSound={playDrumSound}>D</KeyPad>
-        </div>
-        <div className='flex-row'>
-          <KeyPad playDrumSound={playDrumSound}>Z</KeyPad>
-          <KeyPad playDrumSound={playDrumSound}>X</KeyPad>
-          <KeyPad playDrumSound={playDrumSound}>C</KeyPad>
-        </div>
-      </div>
+      <GameGrid>
+        {gameState.map((rows, x) => {
+          return (
+            <>
+              {rows.map((cell, y) => {
+                return (
+                  <GameCell
+                    x={x}
+                    y={y}
+                    hasMine={gameBoard.hasMine(x, y)}
+                    isRevealed={gameState[x][y]}
+                    adjacentBombs={gameBoard.adjacentMines(x, y)}
+                    revealCell={revealCell}
+                  />
+                );
+              })}
+            </>
+          );
+        })}
+      </GameGrid>
+
       <div id='controls'>
         <Controls
           volume={volume}
