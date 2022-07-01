@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { ColgroupHTMLAttributes, useEffect } from 'react';
 import styled, { StyledComponent } from 'styled-components';
 
 interface Props {
@@ -10,12 +10,10 @@ interface Props {
   revealCell: (x: number, y: number) => void;
 }
 
-let cellColor = '#62488f';
-
 const CellBox: StyledComponent<'div', any, {}, never> = styled.div`
   /*   height: 100px;
     width: 100px; */
-  background-color: ${cellColor};
+  background-color: #62488f;
   margin: 1px;
   color: black;
   display: flex;
@@ -23,6 +21,11 @@ const CellBox: StyledComponent<'div', any, {}, never> = styled.div`
   align-items: center;
   font-size: 30px;
   font-weight: bolder;
+`;
+
+const RevealBox = styled(CellBox)`
+  background-color: #ccc;
+  border: 0.15vmin solid black;
 `;
 
 //GameCell button - reusable component
@@ -39,14 +42,14 @@ const GameCell: React.FC<Props> = ({
   // console.log(hasMine);
 
   if (isRevealed) {
-    cellColor = '#CCC';
     if (hasMine) {
-      console.log('mine found!');
+      // console.log('mine found!');
       displayValue = 'B';
-    } else displayValue = adjacentBombs.toString();
-  }
-
-  return <CellBox onClick={() => revealCell(x, y)}>{displayValue}</CellBox>;
+    } else {
+      displayValue = adjacentBombs.toString();
+    }
+    return <RevealBox>{displayValue}</RevealBox>;
+  } else return <CellBox onClick={() => revealCell(x, y)} />;
 };
 
 export default GameCell;

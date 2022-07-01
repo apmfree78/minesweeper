@@ -8,8 +8,8 @@ import GameCell from './GameCell';
 import uuid from 'react-native-uuid';
 
 //size of board , Nx x Ny
-const Nx: number = 5;
-const Ny: number = 5;
+const Nx: number = 20;
+const Ny: number = 20;
 const difficulty: string = 'easy'; // diffculting of game, determines % of mines
 
 // the gameBoard is that create the gameBoard
