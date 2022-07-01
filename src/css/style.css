@@ -4,15 +4,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-#root {
-  background-color: rgb(148, 174, 253);
-  min-height: 100vh;
-  min-width: 100vw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin: 0;
+  background-color: black;
 }
 
 #drum-machine {

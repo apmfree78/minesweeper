@@ -39,25 +39,13 @@ const gameBoard: Board = new Board(Nx, Ny, difficulty);
 type Game = boolean[][];
 
 const GameGrid: StyledComponent<'div', any, {}, never> = styled.div`
+  background-color: #ccc;
+  width: 100vmin;
+  height: 100vmin;
   display: grid;
   grid-template-rows: repeat(${Nx}, 1fr);
   grid-template-columns: repeat(${Ny}, 1fr);
 `;
-
-interface Sound {
-  name: string;
-  file: string;
-  track: number;
-  key: string;
-}
-
-interface Sounds {
-  [x: string]: Sound;
-}
-
-interface TrackIndex {
-  [index: string]: string;
-}
 
 const App: React.FC = () => {
   const [gameState, setGameState] = useState<Game>(gameBoard.getInitialState());
@@ -66,14 +54,17 @@ const App: React.FC = () => {
   function revealCell(x: number, y: number): void {
     // checking to make sure cell is not revealed
     if (!gameState[x][y]) {
+      // saving cell state
+      const newGameState = JSON.parse(JSON.stringify(gameState));
+      newGameState[x][y] = true; //this cell is now revealed! :)
+
       // checking if there is a mine
       if (gameBoard.hasMine(x, y)) {
         setGameOver(true);
+        setGameState(newGameState);
       } else {
         // no bomb found , PLEW!
         // revealing cell
-        const newGameState = JSON.parse(JSON.stringify(gameState));
-        newGameState[x][y] = true; //this cell is now revealed! :)
         //set neighboring cells that have no bombs to true
         // this function will change new game state with updated
         // state with all revealed cells (ie cells set to true)

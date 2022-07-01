@@ -58,9 +58,10 @@ export default class Board {
         // placing mines on gameBoard
         if (Math.random() < frequency) {
           this.gameBoard[i][j].hasMine = true;
+          console.log('mine in place');
           // updating surrounding mine count
           for (const [x, y] of surroundingCells) {
-            if (x > 0 && y > 0 && x < Nx - 1 && y < Ny - 1)
+            if (x >= 0 && y >= 0 && x < Nx && y < Ny)
               this.gameBoard[x][y].adjacentMines++;
           }
         } else this.gameBoard[i][j].hasMine = false;
@@ -122,10 +123,10 @@ export default class Board {
 
     for (const [x, y] of surroundingCells) {
       if (
-        x > 0 &&
-        y > 0 &&
-        x < this.xDim - 1 &&
-        y < this.yDim - 1 &&
+        x >= 0 &&
+        y >= 0 &&
+        x < this.xDim &&
+        y < this.yDim &&
         !this.hasMine(x, y) &&
         !state[x][y]
       ) {
