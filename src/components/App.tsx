@@ -5,6 +5,7 @@ import Board from './gameBoard';
 import styled, { StyledComponent } from 'styled-components';
 import { drumSounds, soundLookup } from '../drum-data';
 import GameCell from './GameCell';
+import uuid from 'react-native-uuid';
 
 //size of board , Nx x Ny
 const Nx: number = 5;
@@ -156,6 +157,7 @@ const App: React.FC = () => {
               {rows.map((cell, y) => {
                 return (
                   <GameCell
+                    key={`${uuid.v4()}`}
                     x={x}
                     y={y}
                     hasMine={gameBoard.hasMine(x, y)}

@@ -32,12 +32,14 @@ export default class Board {
     else if (difficulty === 'hard') frequency = 0.2;
 
     // calculating number of bombs on minefield
-    this.numberOfMines = Nx * Ny * frequency;
+    this.numberOfMines = Math.ceil(Nx * Ny * frequency);
+    console.log(this.gameBoard);
 
     // initializing adjacent mine arrays to zero before placing mines
     for (let i = 0; i < Nx; i++) {
+      this.gameBoard[i] = [];
       for (let j = 0; j < Ny; j++) {
-        this.gameBoard[i][j].adjacentMines = 0;
+        this.gameBoard[i][j] = this.createBlankCell();
       }
     }
     // initialing gameBoard with Mines locations
@@ -45,6 +47,7 @@ export default class Board {
     // all setting gameInitalState =>
     // true => cell is revealed, false => cell is hidden
     for (let i = 0; i < Nx; i++) {
+      this.intialGameState[i] = [];
       for (let j = 0; j < Ny; j++) {
         // determine surround coordinates of cell i,j
         const surroundingCells: number[][] = this.surroundingCellCoordinates(
@@ -65,6 +68,14 @@ export default class Board {
         this.intialGameState[i][j] = false;
       }
     }
+  }
+
+  // returns blank cell
+  createBlankCell(): Cell {
+    return {
+      hasMine: false, // true => has a mine, false => no mine
+      adjacentMines: 0, // number of neighors that have a mine
+    };
   }
 
   // return surround cell coordinates of cell x, y

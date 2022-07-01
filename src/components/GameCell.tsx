@@ -1,4 +1,5 @@
 import React from 'react';
+import styled, { StyledComponent } from 'styled-components';
 
 interface Props {
   x: number;
@@ -8,6 +9,14 @@ interface Props {
   adjacentBombs: number;
   revealCell: (x: number, y: number) => void;
 }
+
+const CellBox: StyledComponent<'div', any, {}, never> = styled.div`
+  height: 100px;
+  width: 100px;
+  background-color: #62488f;
+  border: 5px black;
+  color: #fff;
+`;
 
 //GameCell button - reusable component
 const GameCell: React.FC<Props> = ({
@@ -19,7 +28,6 @@ const GameCell: React.FC<Props> = ({
   revealCell,
 }) => {
   // setting unique id
-  const id: string = JSON.stringify([x, y]);
   let displayValue: string = ' ';
 
   if (isRevealed) {
@@ -27,17 +35,7 @@ const GameCell: React.FC<Props> = ({
     else displayValue = adjacentBombs.toString();
   }
 
-  return (
-    <div id='drum-pad'>
-      <button
-        className='btn btn-primary btn-lg'
-        type='submit'
-        id={id}
-        onClick={() => revealCell(x, y)}>
-        {displayValue}
-      </button>
-    </div>
-  );
+  return <CellBox onClick={() => revealCell(x, y)}>{displayValue}</CellBox>;
 };
 
 export default GameCell;
