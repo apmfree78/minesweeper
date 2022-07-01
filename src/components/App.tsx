@@ -63,18 +63,6 @@ const App: React.FC = () => {
   const [gameState, setGameState] = useState<Game>(gameBoard.getInitialState());
   const [gameOver, setGameOver] = useState<boolean>(false);
 
-  const [sounds, setSounds] = useState<Sounds>(drumSounds);
-  const [currentSound, setCurrentSound] = useState<Sound>({
-    name: '',
-    file: '',
-    track: 0,
-    key: '',
-  });
-  const [trackIndex, setTrackIndex] = useState<TrackIndex[]>(soundLookup);
-  const [power, setPower] = useState<number | boolean>(true);
-  const [track, setTrack] = useState<number | boolean>(0);
-  const [volume, setVolume] = useState<number>(20);
-
   function revealCell(x: number, y: number): void {
     // checking to make sure cell is not revealed
     if (!gameState[x][y]) {
@@ -96,60 +84,8 @@ const App: React.FC = () => {
     }
   }
 
-  //function that takes button the button input 'index'
-  //and then plays corresponding sound
-  const playDrumSound = (index: string): void => {
-    if (!power) return;
-
-    //extract current drum sounds
-    // const location: string = trackIndex[Number(track)][index];
-    const _currentSound: Sound = sounds[trackIndex[Number(track)][index]];
-    //playing drum beta
-    const drumbeat: HTMLAudioElement = new Audio();
-    //assigning drumsound file
-    drumbeat.src = _currentSound.file;
-    //setting volume
-    drumbeat.volume = volume / 100;
-    drumbeat.play();
-
-    //setting state
-    setCurrentSound(_currentSound);
-  };
-
-  //switch power on and off
-  const switchPower = (): void => {
-    let _power: number | boolean = power;
-
-    //if power on turn off, else turn on
-    _power ? (_power = 0) : (_power = 1);
-    //setting state
-    setPower(_power);
-  };
-
-  //switch between the 2 tracks
-  const switchTrack = (): void => {
-    let _track: number | boolean = track;
-
-    //if track is set to 0 set to 1 and vis versa
-    _track === 0 ? (_track = 1) : (_track = 0);
-    //setting state
-    setTrack(_track);
-  };
-
-  //reading slider and setting volume level
-  const setVolumeLevel = (event: ChangeEvent<HTMLInputElement>): void => {
-    let _volume: number = parseInt(event.currentTarget.value);
-    //set state
-    setVolume(_volume);
-  };
-
-  // creating JSX for gameboard with bootstrap grip and a double loop
-  // const gameGrid: JSX.Element[][] = [[]];
-
   return (
-    <div
-      id='drum-machine'
-      className='container d-flex align-items-center justify-content-center'>
+    <>
       <GameGrid>
         {gameState.map((rows, x) => {
           return (
@@ -172,7 +108,7 @@ const App: React.FC = () => {
         })}
       </GameGrid>
 
-      <div id='controls'>
+      {/*       <div id='controls'>
         <Controls
           volume={volume}
           switchPower={switchPower}
@@ -180,8 +116,8 @@ const App: React.FC = () => {
           setVolume={setVolumeLevel}
           currentSound={currentSound}
         />
-      </div>
-    </div> //id='drum-machine'
+      </div> */}
+    </>
   );
 };
 
