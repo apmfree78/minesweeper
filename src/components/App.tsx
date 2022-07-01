@@ -2,6 +2,7 @@ import React, { useState, ChangeEvent } from 'react';
 import KeyPad from './KeyPad';
 import Controls from './Controls';
 import Board from './gameBoard';
+import styled, { StyledComponent } from 'styled-components';
 import { drumSounds, soundLookup } from '../drum-data';
 
 //size of board , Nx x Ny
@@ -34,6 +35,12 @@ const difficulty: string = 'easy'; // diffculting of game, determines % of mines
  */
 const gameBoard: Board = new Board(Nx, Ny, difficulty);
 type Game = boolean[][];
+
+const gameGrid: StyledComponent<'div', any, {}, never> = styled.div`
+  display: grid;
+  grid-template-rows: repeat(${Nx}, 1fr);
+  grid-template-columns: repeat(${Ny}, 1fr);
+`;
 
 interface Sound {
   name: string;
@@ -133,6 +140,9 @@ const App: React.FC = () => {
     //set state
     setVolume(_volume);
   };
+
+  // creating JSX for gameboard with bootstrap grip and a double loop
+  // const gameGrid: JSX.Element[][] = [[]];
 
   return (
     <div
