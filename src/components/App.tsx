@@ -1,6 +1,4 @@
 import React, { useState, ChangeEvent } from 'react';
-import KeyPad from './KeyPad';
-import Controls from './Controls';
 import Board from './gameBoard';
 import styled, { StyledComponent } from 'styled-components';
 import { drumSounds, soundLookup } from '../drum-data';
@@ -8,7 +6,7 @@ import GameCell from './GameCell';
 import uuid from 'react-native-uuid';
 
 //size of board , Nx x Ny
-const Nx: number = 10;
+const Nx: number = 15;
 const Ny: number = 20;
 const difficulty: string = 'easy'; // diffculting of game, determines % of mines
 
@@ -51,6 +49,9 @@ const App: React.FC = () => {
   const [gameState, setGameState] = useState<Game>(gameBoard.getInitialState());
   const [gameOver, setGameOver] = useState<boolean>(false);
 
+  // reveals game cells after they are clicked by player
+  // if there are no surrounding mines, then repeats this
+  // process for neighboring cells, recursively
   function revealCell(x: number, y: number): void {
     // checking to make sure cell is not revealed
     if (!gameState[x][y]) {
@@ -76,39 +77,27 @@ const App: React.FC = () => {
   }
 
   return (
-    <>
-      <GameGrid>
-        {gameState.map((rows, x) => {
-          return (
-            <>
-              {rows.map((cell, y) => {
-                return (
-                  <GameCell
-                    key={`${uuid.v4()}`}
-                    x={x}
-                    y={y}
-                    hasMine={gameBoard.hasMine(x, y)}
-                    isRevealed={gameState[x][y]}
-                    adjacentBombs={gameBoard.adjacentMines(x, y)}
-                    revealCell={revealCell}
-                  />
-                );
-              })}
-            </>
-          );
-        })}
-      </GameGrid>
-
-      {/*       <div id='controls'>
-        <Controls
-          volume={volume}
-          switchPower={switchPower}
-          switchTrack={switchTrack}
-          setVolume={setVolumeLevel}
-          currentSound={currentSound}
-        />
-      </div> */}
-    </>
+    <GameGrid>
+      {gameState.map((rows, x) => {
+        return (
+          <>
+            {rows.map((cell, y) => {
+              return (
+                <GameCell
+                  key={`${uuid.v4()}`}
+                  x={x}
+                  y={y}
+                  hasMine={gameBoard.hasMine(x, y)}
+                  isRevealed={gameState[x][y]}
+                  adjacentBombs={gameBoard.adjacentMines(x, y)}
+                  revealCell={revealCell}
+                />
+              );
+            })}
+          </>
+        );
+      })}
+    </GameGrid>
   );
 };
 
