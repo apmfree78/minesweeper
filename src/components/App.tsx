@@ -6,8 +6,8 @@ import GameCell from './GameCell';
 import uuid from 'react-native-uuid';
 
 //size of board , Nx x Ny
-const Nx: number = 5;
-const Ny: number = 5;
+const Nx: number = 15;
+const Ny: number = 20;
 const difficulty: string = 'easy'; // diffculting of game, determines % of mines
 
 // the gameBoard is that create the gameBoard
@@ -87,11 +87,15 @@ const App: React.FC = () => {
 
         // pop up alert that game is lost
         Swal.fire({
-          icon: 'warning',
+          icon: 'error',
           title: 'BOOM! EXPLOSION',
           text: `Please Try Again!!`,
-          timer: 10000,
+          showDenyButton: true,
+          denyButtonText: 'Restart Game',
+        }).then((result) => {
+          if (result.isDenied) resetGame();
         });
+        setTimeout(resetGame, 5000); //restart game
       } else {
         // no bomb found , PLEW!
         // revealing cell
@@ -115,9 +119,13 @@ const App: React.FC = () => {
           Swal.fire({
             icon: 'success',
             title: 'CONGRADULATIONS',
-            text: `YOU WON!!`,
-            timer: 10000,
+            text: `YOU WON!! SCORE: ${gameScore}`,
+            showDenyButton: true,
+            denyButtonText: 'Play Again',
+          }).then((result) => {
+            if (result.isDenied) resetGame();
           });
+          setTimeout(resetGame, 5000); //restart game
         } else {
           // update score
           setGameScore(gameBoard.revealedCells);
