@@ -1,2 +1,2 @@
-# Drum Machine App written with Typescript and React
+# MineSweeper Game written with React, Typescript, Styled Components, & CSS Grid
 
