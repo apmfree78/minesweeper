@@ -57,6 +57,7 @@ const App: React.FC = () => {
       // saving cell state
       const newGameState = JSON.parse(JSON.stringify(gameState));
       newGameState[x][y] = true; //this cell is now revealed! :)
+      gameBoard.revealedCells++; //increment number of revealed cells
 
       // checking if there is a mine
       if (gameBoard.hasMine(x, y)) {

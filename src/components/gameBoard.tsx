@@ -8,6 +8,7 @@ type Game = boolean[][];
 
 export default class Board {
   numberOfMines: number = 0; // number of mines on board
+  revealedCells: number = 0; // keeps track of number of revealed cells
 
   // x and y dimensions + GameGrid dimensions
   xDim: number;
@@ -141,6 +142,7 @@ export default class Board {
         !state[x][y]
       ) {
         state[x][y] = true;
+        this.revealedCells++; //add to count of revealed cells
         if (this.adjacentMines(x, y) === 0) this.revealNeighbors(x, y, state);
       }
     }
