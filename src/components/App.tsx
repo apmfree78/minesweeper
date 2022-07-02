@@ -4,6 +4,7 @@ import styled, { StyledComponent } from 'styled-components';
 import Swal from 'sweetalert2';
 import GameCell from './GameCell';
 import uuid from 'react-native-uuid';
+import { revealSound } from '../sounds';
 
 //size of board , Nx x Ny
 const Nx: number = 15;
@@ -78,6 +79,7 @@ const App: React.FC = () => {
 
       // checking if there is a mine
       if (gameBoard.hasMine(x, y)) {
+        // THERE IS A MINE
         // Player has LOST GAME
         setGameState(newGameState);
         setGameScore(0);
@@ -97,6 +99,10 @@ const App: React.FC = () => {
       } else {
         // no bomb found , PLEW!
         // revealing cell
+        newGameState[x][y] = true;
+        // play beeping sound
+        revealSound();
+
         //set neighboring cells that have no bombs to true
         // this function will change new game state with updated
         // state with all revealed cells (ie cells set to true)
