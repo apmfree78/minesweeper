@@ -92,10 +92,11 @@ const App: React.FC = () => {
           text: `Please Try Again!!`,
           showDenyButton: true,
           denyButtonText: 'Restart Game',
+          timer: 5000,
         }).then((result) => {
           if (result.isDenied) resetGame();
         });
-        setTimeout(resetGame, 5000); //restart game
+        setTimeout(resetGame, 3000); //restart game
       } else {
         // no bomb found , PLEW!
         // revealing cell
@@ -122,10 +123,11 @@ const App: React.FC = () => {
             text: `YOU WON!! SCORE: ${gameScore}`,
             showDenyButton: true,
             denyButtonText: 'Play Again',
+            timer: 5000,
           }).then((result) => {
             if (result.isDenied) resetGame();
           });
-          setTimeout(resetGame, 5000); //restart game
+          setTimeout(resetGame, 3000); //restart game
         } else {
           // update score
           setGameScore(gameBoard.revealedCells);
