@@ -8,7 +8,7 @@ import GameCell from './GameCell';
 import uuid from 'react-native-uuid';
 
 //size of board , Nx x Ny
-const Nx: number = 20;
+const Nx: number = 10;
 const Ny: number = 20;
 const difficulty: string = 'easy'; // diffculting of game, determines % of mines
 
@@ -40,8 +40,8 @@ type Game = boolean[][];
 
 const GameGrid: StyledComponent<'div', any, {}, never> = styled.div`
   background-color: #ccc;
-  width: 100vmin;
-  height: 100vmin;
+  width: ${gameBoard.yWidth}vmin;
+  height: ${gameBoard.xHeight}vmin;
   display: grid;
   grid-template-rows: repeat(${Nx}, 1fr);
   grid-template-columns: repeat(${Ny}, 1fr);

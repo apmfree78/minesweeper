@@ -7,11 +7,13 @@ type Cells = Cell[][];
 type Game = boolean[][];
 
 export default class Board {
-  numberOfMines: number; // number of mines on board
+  numberOfMines: number = 0; // number of mines on board
 
-  // x and y dimensions
+  // x and y dimensions + GameGrid dimensions
   xDim: number;
   yDim: number;
+  xHeight: number;
+  yWidth: number;
 
   // gameBoard is double array containing all Cells of game
   // where each Cell contains the 3 fields defined in interface Cell
@@ -27,13 +29,18 @@ export default class Board {
     this.xDim = Nx;
     this.yDim = Ny;
 
+    // setting GameGrid vmin dimensions
+    if (Nx > Ny) {
+      this.xHeight = 100;
+      this.yWidth = Math.round((100 * Ny) / Nx);
+    } else {
+      this.xHeight = Math.round((100 * Nx) / Ny);
+      this.yWidth = 100;
+    }
+
     //checking if there is higher difficulting setting
     if (difficulty === 'medium') frequency = 0.15;
     else if (difficulty === 'hard') frequency = 0.2;
-
-    // calculating number of bombs on minefield
-    this.numberOfMines = Math.ceil(Nx * Ny * frequency);
-    console.log(this.gameBoard);
 
     // initializing adjacent mine arrays to zero before placing mines
     for (let i = 0; i < Nx; i++) {
@@ -58,6 +65,9 @@ export default class Board {
         // placing mines on gameBoard
         if (Math.random() < frequency) {
           this.gameBoard[i][j].hasMine = true;
+
+          // increase mine counter
+          this.numberOfMines++;
           console.log('mine in place');
           // updating surrounding mine count
           for (const [x, y] of surroundingCells) {
