@@ -15,11 +15,13 @@ const CellBox: StyledComponent<'div', any, {}, never> = styled.div`
     width: 100px; */
   background-color: #62488f;
   margin: 1px;
+  border-radius: 2px;
+  border: 0.15vmin solid orange;
   color: black;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.5;
+  font-size: 2vmin;
   font-weight: bolder;
 `;
 

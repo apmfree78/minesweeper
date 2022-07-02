@@ -35,6 +35,8 @@ const difficulty: string = 'easy'; // diffculting of game, determines % of mines
 let gameBoard: Board = new Board(Nx, Ny, difficulty);
 type Game = boolean[][];
 
+// styled component for the game board, using CSS grid
+// with dynamic values
 const GameGrid: StyledComponent<'div', any, {}, never> = styled.div`
   background-color: #ccc;
   width: ${gameBoard.yWidth}vmin;
@@ -44,6 +46,7 @@ const GameGrid: StyledComponent<'div', any, {}, never> = styled.div`
   grid-template-columns: repeat(${Ny}, 1fr);
 `;
 
+// score board shows the score, # of mines, and button to restart game
 const ScoreBoard: StyledComponent<'div', any, {}, never> = styled.div`
   /* background-color: #ccc; */
   padding: 7px 0px 5px 0px;
@@ -51,6 +54,7 @@ const ScoreBoard: StyledComponent<'div', any, {}, never> = styled.div`
   border: 5px solid aqua;
   color: orange;
   font-size: 24px;
+  font-weight: bolder;
   display: flex;
   justify-content: space-around;
   align-content: center;
