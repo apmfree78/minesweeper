@@ -1,7 +1,6 @@
 import React, { useState, ChangeEvent } from 'react';
 import Board from './gameBoard';
 import styled, { StyledComponent } from 'styled-components';
-import { drumSounds, soundLookup } from '../drum-data';
 import GameCell from './GameCell';
 import uuid from 'react-native-uuid';
 
