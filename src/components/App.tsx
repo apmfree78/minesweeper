@@ -1,12 +1,13 @@
 import React, { useState, ChangeEvent, useEffect } from 'react';
 import Board from './gameBoard';
 import styled, { StyledComponent } from 'styled-components';
+import Swal from 'sweetalert2';
 import GameCell from './GameCell';
 import uuid from 'react-native-uuid';
 
 //size of board , Nx x Ny
-const Nx: number = 15;
-const Ny: number = 20;
+const Nx: number = 5;
+const Ny: number = 5;
 const difficulty: string = 'easy'; // diffculting of game, determines % of mines
 
 // the gameBoard is that create the gameBoard
@@ -83,6 +84,14 @@ const App: React.FC = () => {
         setGameOver(true);
         setGameState(newGameState);
         setGameScore(0);
+
+        // pop up alert that game is lost
+        Swal.fire({
+          icon: 'warning',
+          title: 'BOOM! EXPLOSION',
+          text: `Please Try Again!!`,
+          timer: 10000,
+        });
       } else {
         // no bomb found , PLEW!
         // revealing cell
@@ -101,6 +110,14 @@ const App: React.FC = () => {
         ) {
           setGameWon(true);
           setGameScore(gameBoard.totalCellCount());
+
+          // Player has won, success message
+          Swal.fire({
+            icon: 'success',
+            title: 'CONGRADULATIONS',
+            text: `YOU WON!!`,
+            timer: 10000,
+          });
         } else {
           // update score
           setGameScore(gameBoard.revealedCells);
