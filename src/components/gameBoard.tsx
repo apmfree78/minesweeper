@@ -37,9 +37,9 @@ export default class Board {
     // setting GameGrid vmin dimensions
     if (Nx > Ny) {
       this.xHeight = 100;
-      this.yWidth = Math.round((100 * Ny) / Nx);
+      this.yWidth = Math.round((0.8 * (100 * Ny)) / Nx);
     } else {
-      this.xHeight = Math.round((100 * Nx) / Ny);
+      this.xHeight = Math.round((0.8 * 100 * Nx) / Ny);
       this.yWidth = 100;
     }
 

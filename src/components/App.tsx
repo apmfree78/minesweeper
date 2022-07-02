@@ -1,12 +1,12 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent, useEffect } from 'react';
 import Board from './gameBoard';
 import styled, { StyledComponent } from 'styled-components';
 import GameCell from './GameCell';
 import uuid from 'react-native-uuid';
 
 //size of board , Nx x Ny
-const Nx: number = 15;
-const Ny: number = 20;
+const Nx: number = 5;
+const Ny: number = 5;
 const difficulty: string = 'easy'; // diffculting of game, determines % of mines
 
 // the gameBoard is that create the gameBoard
@@ -52,8 +52,9 @@ const ScoreBoard: StyledComponent<'div', any, {}, never> = styled.div`
 
 const App: React.FC = () => {
   const [gameState, setGameState] = useState<Game>(gameBoard.getInitialState());
-  const [gameOver, setGameOver] = useState<boolean>(false);
   const [gameScore, setGameScore] = useState<number>(0);
+  const [gameOver, setGameOver] = useState<boolean>(false);
+  const [gameWon, setGameWon] = useState<boolean>(false);
 
   // reveals game cells after they are clicked by player
   // if there are no surrounding mines, then repeats this
@@ -70,6 +71,7 @@ const App: React.FC = () => {
       if (gameBoard.hasMine(x, y)) {
         setGameOver(true);
         setGameState(newGameState);
+        setGameScore(0);
       } else {
         // no bomb found , PLEW!
         // revealing cell
@@ -79,9 +81,20 @@ const App: React.FC = () => {
         if (gameBoard.adjacentMines(x, y) === 0)
           gameBoard.revealNeighbors(x, y, newGameState);
         setGameState(newGameState);
+
+        // check if player has won game
+        // if total cells === total # of bombs + cells revealed, player has WON!
+        if (
+          gameBoard.totalCellCount() ===
+          gameBoard.totalMineCount() + gameBoard.revealedCells
+        ) {
+          setGameWon(true);
+          setGameScore(gameBoard.totalCellCount());
+        } else {
+          // update score
+          setGameScore(gameBoard.revealedCells);
+        }
       }
-      // update score
-      setGameScore(gameBoard.revealedCells);
     }
   }
 
@@ -93,20 +106,6 @@ const App: React.FC = () => {
     setGameState(gameBoard.getInitialState());
   }
 
-  // check if player has won game
-  // if total cells === total # of bombs + cells revealed, player has WON!
-  if (
-    gameBoard.totalCellCount() ===
-    gameBoard.totalMineCount() + gameBoard.revealedCells
-  ) {
-    //1 update score
-    setGameScore(gameBoard.totalCellCount());
-    // 2 show pop up message letting player known they have won
-  } else if (gameOver) {
-    // 1 set score to zero
-    setGameScore(0);
-    // 2 show pop up message that player has lost
-  }
   return (
     <>
       <ScoreBoard>
