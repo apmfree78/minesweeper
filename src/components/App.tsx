@@ -45,9 +45,15 @@ const GameGrid: StyledComponent<'div', any, {}, never> = styled.div`
 `;
 
 const ScoreBoard: StyledComponent<'div', any, {}, never> = styled.div`
-  background-color: #ccc;
+  /* background-color: #ccc; */
+  padding: 7px 0px 5px 0px;
+  margin-bottom: 10px;
+  border: 5px solid aqua;
+  color: orange;
+  font-size: 24px;
   display: flex;
   justify-content: space-around;
+  align-content: center;
 `;
 
 const App: React.FC = () => {
@@ -69,6 +75,7 @@ const App: React.FC = () => {
 
       // checking if there is a mine
       if (gameBoard.hasMine(x, y)) {
+        // Player has LOST GAME
         setGameOver(true);
         setGameState(newGameState);
         setGameScore(0);
@@ -82,7 +89,7 @@ const App: React.FC = () => {
           gameBoard.revealNeighbors(x, y, newGameState);
         setGameState(newGameState);
 
-        // check if player has won game
+        // check if player has WON game
         // if total cells === total # of bombs + cells revealed, player has WON!
         if (
           gameBoard.totalCellCount() ===
@@ -109,7 +116,8 @@ const App: React.FC = () => {
   return (
     <>
       <ScoreBoard>
-        <span>Score: {gameScore}</span>
+        <span>SCORE: {gameScore}</span>
+        <span>MINES: {gameBoard.totalMineCount()}</span>
         <button type='submit' onClick={() => resetGame()}>
           Restart Game
         </button>
