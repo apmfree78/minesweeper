@@ -9,6 +9,7 @@ type Game = boolean[][];
 export default class Board {
   numberOfMines: number = 0; // number of mines on board
   revealedCells: number = 0; // keeps track of number of revealed cells
+  totalCells: number = 0; //total number of cells in the game;
 
   // x and y dimensions + GameGrid dimensions
   xDim: number;
@@ -29,6 +30,9 @@ export default class Board {
     // setting board dimensions
     this.xDim = Nx;
     this.yDim = Ny;
+
+    // calculate total cells in game
+    this.totalCells = Nx * Ny;
 
     // setting GameGrid vmin dimensions
     if (Nx > Ny) {
@@ -124,6 +128,11 @@ export default class Board {
   // total number of mines on the board
   totalMineCount() {
     return this.numberOfMines;
+  }
+
+  // total number of cells on the board
+  totalCellCount() {
+    return this.totalCells;
   }
 
   // recursive function to reveal each neighor that does not contain

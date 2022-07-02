@@ -32,7 +32,7 @@ const difficulty: string = 'easy'; // diffculting of game, determines % of mines
   revealNeighbors(i: number, j: number, state: Game, boardState: Board): void 
 
  */
-const gameBoard: Board = new Board(Nx, Ny, difficulty);
+let gameBoard: Board = new Board(Nx, Ny, difficulty);
 type Game = boolean[][];
 
 const GameGrid: StyledComponent<'div', any, {}, never> = styled.div`
@@ -74,6 +74,14 @@ const App: React.FC = () => {
         setGameState(newGameState);
       }
     }
+  }
+
+  // reset the board
+  function resetGame() {
+    //generate new gameboard
+    gameBoard = new Board(Nx, Ny, difficulty);
+    // reset game state with all cells hidden
+    setGameState(gameBoard.getInitialState());
   }
 
   return (
