@@ -44,9 +44,16 @@ const GameGrid: StyledComponent<'div', any, {}, never> = styled.div`
   grid-template-columns: repeat(${Ny}, 1fr);
 `;
 
+const ScoreBoard: StyledComponent<'div', any, {}, never> = styled.div`
+  background-color: #ccc;
+  display: flex;
+  justify-content: space-around;
+`;
+
 const App: React.FC = () => {
   const [gameState, setGameState] = useState<Game>(gameBoard.getInitialState());
   const [gameOver, setGameOver] = useState<boolean>(false);
+  const [gameScore, setGameScore] = useState<number>(0);
 
   // reveals game cells after they are clicked by player
   // if there are no surrounding mines, then repeats this
@@ -73,6 +80,8 @@ const App: React.FC = () => {
           gameBoard.revealNeighbors(x, y, newGameState);
         setGameState(newGameState);
       }
+      // update score
+      setGameScore(gameBoard.revealedCells);
     }
   }
 
@@ -84,28 +93,50 @@ const App: React.FC = () => {
     setGameState(gameBoard.getInitialState());
   }
 
+  // check if player has won game
+  // if total cells === total # of bombs + cells revealed, player has WON!
+  if (
+    gameBoard.totalCellCount() ===
+    gameBoard.totalMineCount() + gameBoard.revealedCells
+  ) {
+    //1 update score
+    setGameScore(gameBoard.totalCellCount());
+    // 2 show pop up message letting player known they have won
+  } else if (gameOver) {
+    // 1 set score to zero
+    setGameScore(0);
+    // 2 show pop up message that player has lost
+  }
   return (
-    <GameGrid>
-      {gameState.map((rows, x) => {
-        return (
-          <>
-            {rows.map((cell, y) => {
-              return (
-                <GameCell
-                  key={`${uuid.v4()}`}
-                  x={x}
-                  y={y}
-                  hasMine={gameBoard.hasMine(x, y)}
-                  isRevealed={gameState[x][y]}
-                  adjacentBombs={gameBoard.adjacentMines(x, y)}
-                  revealCell={revealCell}
-                />
-              );
-            })}
-          </>
-        );
-      })}
-    </GameGrid>
+    <>
+      <ScoreBoard>
+        <span>Score: {gameScore}</span>
+        <button type='submit' onClick={() => resetGame()}>
+          Restart Game
+        </button>
+      </ScoreBoard>
+      <GameGrid>
+        {gameState.map((rows, x) => {
+          return (
+            <>
+              {rows.map((cell, y) => {
+                return (
+                  <GameCell
+                    key={`${uuid.v4()}`}
+                    x={x}
+                    y={y}
+                    hasMine={gameBoard.hasMine(x, y)}
+                    isRevealed={gameState[x][y]}
+                    adjacentBombs={gameBoard.adjacentMines(x, y)}
+                    revealCell={revealCell}
+                  />
+                );
+              })}
+            </>
+          );
+        })}
+      </GameGrid>
+    </>
   );
 };
 
