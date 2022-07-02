@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Board from './gameBoard';
 import styled, { StyledComponent } from 'styled-components';
 import Swal from 'sweetalert2';
 import GameCell from './GameCell';
 import uuid from 'react-native-uuid';
-import { revealSound } from '../sounds';
+import { playSound } from '../sounds';
 
 //size of board , Nx x Ny
-const Nx: number = 15;
-const Ny: number = 20;
+const Nx: number = 5;
+const Ny: number = 5;
 const difficulty: string = 'easy'; // diffculting of game, determines % of mines
 
 // the gameBoard is that create the gameBoard
@@ -81,27 +81,32 @@ const App: React.FC = () => {
       if (gameBoard.hasMine(x, y)) {
         // THERE IS A MINE
         // Player has LOST GAME
+        playSound('bomb');
         setGameState(newGameState);
         setGameScore(0);
 
-        // pop up alert that game is lost
+        // message
         Swal.fire({
+          position: 'top',
           icon: 'error',
           title: 'BOOM! EXPLOSION',
           text: `Please Try Again!!`,
           showDenyButton: true,
           denyButtonText: 'Restart Game',
-          timer: 5000,
+          timer: 10000,
         }).then((result) => {
           if (result.isDenied) resetGame();
         });
-        setTimeout(resetGame, 3000); //restart game
+        // pop up alert that game is lost
+        // sound
+        setTimeout(() => playSound('lost'), 1000);
+        setTimeout(resetGame, 5000); //restart game
       } else {
         // no bomb found , PLEW!
         // revealing cell
         newGameState[x][y] = true;
         // play beeping sound
-        revealSound();
+        playSound('reveal');
 
         //set neighboring cells that have no bombs to true
         // this function will change new game state with updated
@@ -118,14 +123,18 @@ const App: React.FC = () => {
         ) {
           setGameScore(gameBoard.totalCellCount());
 
-          // Player has won, success message
+          // Player has won, success message + sound
+          // sound
+          playSound('win');
+          // message
           Swal.fire({
+            position: 'top',
             icon: 'success',
             title: 'CONGRADULATIONS',
             text: `YOU WON!! SCORE: ${gameScore}`,
             showDenyButton: true,
             denyButtonText: 'Play Again',
-            timer: 5000,
+            timer: 10000,
           }).then((result) => {
             if (result.isDenied) resetGame();
           });
@@ -142,9 +151,18 @@ const App: React.FC = () => {
   function resetGame() {
     //generate new gameboard
     gameBoard = new Board(Nx, Ny, difficulty);
+    // play start sound
+
+    playSound('start');
+
     // reset game state with all cells hidden
     setGameState(gameBoard.getInitialState());
   }
+
+  // play sound at start of game
+  useEffect(() => {
+    playSound('start');
+  }, []);
 
   return (
     <>
