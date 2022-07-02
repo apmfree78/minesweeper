@@ -1,4 +1,3 @@
-import React, { ColgroupHTMLAttributes, useEffect } from 'react';
 import styled, { StyledComponent } from 'styled-components';
 
 interface Props {

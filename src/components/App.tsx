@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, useEffect } from 'react';
+import React, { useState } from 'react';
 import Board from './gameBoard';
 import styled, { StyledComponent } from 'styled-components';
 import Swal from 'sweetalert2';
@@ -64,8 +64,6 @@ const ScoreBoard: StyledComponent<'div', any, {}, never> = styled.div`
 const App: React.FC = () => {
   const [gameState, setGameState] = useState<Game>(gameBoard.getInitialState());
   const [gameScore, setGameScore] = useState<number>(0);
-  const [gameOver, setGameOver] = useState<boolean>(false);
-  const [gameWon, setGameWon] = useState<boolean>(false);
 
   // reveals game cells after they are clicked by player
   // if there are no surrounding mines, then repeats this
@@ -81,7 +79,6 @@ const App: React.FC = () => {
       // checking if there is a mine
       if (gameBoard.hasMine(x, y)) {
         // Player has LOST GAME
-        setGameOver(true);
         setGameState(newGameState);
         setGameScore(0);
 
@@ -113,7 +110,6 @@ const App: React.FC = () => {
           gameBoard.totalCellCount() ===
           gameBoard.totalMineCount() + gameBoard.revealedCells
         ) {
-          setGameWon(true);
           setGameScore(gameBoard.totalCellCount());
 
           // Player has won, success message
