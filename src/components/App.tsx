@@ -7,8 +7,8 @@ import uuid from 'react-native-uuid';
 import { playSound } from '../sounds';
 
 //size of board , Nx x Ny
-const Nx: number = 5;
-const Ny: number = 5;
+const Nx: number = 15;
+const Ny: number = 20;
 const difficulty: string = 'easy'; // diffculting of game, determines % of mines
 
 // the gameBoard is that create the gameBoard
@@ -37,15 +37,24 @@ const difficulty: string = 'easy'; // diffculting of game, determines % of mines
 let gameBoard: Board = new Board(Nx, Ny, difficulty);
 type Game = boolean[][];
 
+interface GridProps {
+  width: number;
+  height: number;
+  xdim: number;
+  ydim: number;
+}
+
 // styled component for the game board, using CSS grid
 // with dynamic values
-const GameGrid: StyledComponent<'div', any, {}, never> = styled.div`
+const GameGrid = styled.div<GridProps>`
   background-color: #ccc;
-  width: ${gameBoard.yWidth}vmin;
-  height: ${gameBoard.xHeight}vmin;
+  width: ${(p) => p.width}vmin;
+  height: ${(p) => p.height}vmin;
+  /* width: ${gameBoard.yWidth}vmin;
+  height: ${gameBoard.xHeight}vmin; */
   display: grid;
-  grid-template-rows: repeat(${Nx}, 1fr);
-  grid-template-columns: repeat(${Ny}, 1fr);
+  grid-template-rows: repeat(${(p) => p.xdim}, 1fr);
+  grid-template-columns: repeat(${(p) => p.ydim}, 1fr);
 `;
 
 // score board shows the score, # of mines, and button to restart game
@@ -161,6 +170,7 @@ const App: React.FC = () => {
 
   // play sound at start of game
   useEffect(() => {
+    console.log('play start sound');
     playSound('start');
   }, []);
 
@@ -173,7 +183,11 @@ const App: React.FC = () => {
           Restart Game
         </button>
       </ScoreBoard>
-      <GameGrid>
+      <GameGrid
+        height={gameBoard.xHeight}
+        width={gameBoard.yWidth}
+        xdim={gameBoard.xDim}
+        ydim={gameBoard.yDim}>
         {gameState.map((rows, x) => {
           return (
             <>
