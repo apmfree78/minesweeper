@@ -6,6 +6,14 @@
   font-style: normal;
 }
 
+.swal2-title,
+.swal2-button,
+.swal2-text,
+.swal2-modal,
+.swal2-popup {
+  font-family: 'emulogicregular';
+}
+
 body {
   height: 100vh;
   width: 100vw;
