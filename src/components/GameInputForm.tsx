@@ -70,7 +70,12 @@ export const GameInputForm: React.FC<Props> = ({ resetGame }) => {
       <label id='xDim'>
         Height
         <select
-          style={{ marginLeft: 12, padding: 5 }}
+          style={{
+            marginLeft: 12,
+            padding: 5,
+            borderWidth: 5,
+            borderColor: '#CCC',
+          }}
           id='xDim'
           name='xDim'
           value={inputValues.xDim}
@@ -92,7 +97,12 @@ export const GameInputForm: React.FC<Props> = ({ resetGame }) => {
       <label id='yDim'>
         Width
         <select
-          style={{ marginLeft: 12, padding: 5 }}
+          style={{
+            marginLeft: 12,
+            padding: 5,
+            borderWidth: 5,
+            borderColor: '#CCC',
+          }}
           id='yDim'
           name='yDim'
           value={inputValues.yDim}
@@ -114,7 +124,12 @@ export const GameInputForm: React.FC<Props> = ({ resetGame }) => {
       <label id='difficulty'>
         Difficulty
         <select
-          style={{ marginLeft: 12, padding: 5 }}
+          style={{
+            marginLeft: 12,
+            padding: 5,
+            borderWidth: 5,
+            borderColor: '#CCC',
+          }}
           id='difficulty'
           name='difficulty'
           value={inputValues.difficulty}
@@ -130,7 +145,9 @@ export const GameInputForm: React.FC<Props> = ({ resetGame }) => {
           </option>
         </select>
       </label>
-      <button type='submit' style={{ padding: 4 }}>
+      <button
+        type='submit'
+        style={{ padding: 4, borderWidth: 5, borderColor: '#CCC' }}>
         Start New Game
       </button>
     </GameForm>

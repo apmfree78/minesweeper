@@ -186,9 +186,14 @@ const App: React.FC = () => {
   return (
     <>
       <ScoreBoard>
-        <span>SCORE: {gameScore}</span>
-        <span>MINES: {gameBoard.totalMineCount()}</span>
-        <button type='submit' onClick={() => resetGame()}>
+        <span style={{ paddingTop: 4 }}>SCORE: {gameScore}</span>
+        <span style={{ paddingTop: 4 }}>
+          MINES: {gameBoard.totalMineCount()}
+        </span>
+        <button
+          type='submit'
+          style={{ borderWidth: 5, borderColor: '#CCC' }}
+          onClick={() => resetGame()}>
           Restart Game
         </button>
       </ScoreBoard>
