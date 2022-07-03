@@ -8,7 +8,8 @@ const GameForm: StyledComponent<'form', any, {}, never> = styled.form`
   margin-bottom: 10px;
   border: 5px solid aqua;
   color: orange;
-  font-size: 20px;
+  font-family: 'emulogicregular';
+  font-size: 14px;
   font-weight: bolder;
   display: flex;
   justify-content: space-around;
@@ -129,7 +130,7 @@ export const GameInputForm: React.FC<Props> = ({ resetGame }) => {
           </option>
         </select>
       </label>
-      <button type='submit' style={{ padding: 2 }}>
+      <button type='submit' style={{ padding: 4 }}>
         Start New Game
       </button>
     </GameForm>

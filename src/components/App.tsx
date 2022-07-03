@@ -50,6 +50,8 @@ interface GridProps {
 // with dynamic values
 const GameGrid = styled.div<GridProps>`
   background-color: #ccc;
+  font-family: 'emulogicregular';
+  font-size: 0.1vmin;
   width: ${(p) => p.width}vmin;
   height: ${(p) => p.height}vmin;
   /* width: ${gameBoard.yWidth}vmin;
@@ -66,7 +68,8 @@ const ScoreBoard: StyledComponent<'div', any, {}, never> = styled.div`
   margin-bottom: 10px;
   border: 5px solid aqua;
   color: orange;
-  font-size: 24px;
+  font-family: 'emulogicregular';
+  font-size: 18px;
   font-weight: bolder;
   display: flex;
   justify-content: space-around;
@@ -160,9 +163,9 @@ const App: React.FC = () => {
 
   // reset the board
   function resetGame(
-    xdim: number = 15,
-    ydim: number = 20,
-    level: string = 'easy'
+    xdim: number = gameBoard.xDim,
+    ydim: number = gameBoard.yDim,
+    level: string = gameBoard.difficulty
   ): void {
     //generate new gameboard
     gameBoard = new Board(xdim, ydim, level);

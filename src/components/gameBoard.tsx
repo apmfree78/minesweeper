@@ -17,6 +17,9 @@ export default class Board {
   xHeight: number;
   yWidth: number;
 
+  //setting game difficulty , it's either 'easy' , 'medium' or 'hard
+  difficulty: string;
+
   // gameBoard is double array containing all Cells of game
   // where each Cell contains the 3 fields defined in interface Cell
   gameBoard: Cells = [[]];
@@ -30,6 +33,9 @@ export default class Board {
     // setting board dimensions
     this.xDim = Nx;
     this.yDim = Ny;
+
+    //setting difficulty
+    this.difficulty = difficulty;
 
     // calculate total cells in game
     this.totalCells = Nx * Ny;

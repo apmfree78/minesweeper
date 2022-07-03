@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'emulogicregular';
+  src: url('emulogic-zrew-webfont.woff2') format('woff2'),
+    url('emulogic-zrew-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
   height: 100vh;
   width: 100vw;
