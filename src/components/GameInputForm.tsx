@@ -4,11 +4,11 @@ import styled, { StyledComponent } from 'styled-components';
 // Input Form for player to choose size and difficulty and start new game
 const GameForm: StyledComponent<'form', any, {}, never> = styled.form`
   /* background-color: #ccc; */
-  padding: 7px 0px 5px 0px;
+  padding: 10px 0px 10px 0px;
   margin-bottom: 10px;
   border: 5px solid aqua;
   color: orange;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bolder;
   display: flex;
   justify-content: space-around;
@@ -16,7 +16,8 @@ const GameForm: StyledComponent<'form', any, {}, never> = styled.form`
 `;
 
 interface Props {
-  handleSubmit: (e: FormEvent) => void;
+  // handleSubmit: (e: FormEvent) => void;
+  resetGame: (xDim: number, yDim: number, level: string) => void;
 }
 
 interface Inputs {
@@ -25,7 +26,7 @@ interface Inputs {
   difficulty: string;
 }
 
-export const GameInputForm: React.FC<Props> = ({ handleSubmit }) => {
+export const GameInputForm: React.FC<Props> = ({ resetGame }) => {
   const [inputValues, setInputValues] = useState<Inputs>({
     xDim: 15,
     yDim: 20,
@@ -33,10 +34,11 @@ export const GameInputForm: React.FC<Props> = ({ handleSubmit }) => {
   });
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>): void => {
-    let { value, name, type } = event.currentTarget;
+    let { value, name } = event.currentTarget;
     let numValue: number;
+    // console.log(name);
 
-    if (type === 'number') {
+    if (name === 'xDim' || name === 'yDim') {
       numValue = parseInt(value);
 
       setInputValues({
@@ -51,11 +53,23 @@ export const GameInputForm: React.FC<Props> = ({ handleSubmit }) => {
     }
   };
 
+  const handleSubmit = (event: FormEvent): void => {
+    // prevent default behavior
+    event.preventDefault();
+
+    //extracting values from state
+    let { xDim, yDim, difficulty } = inputValues;
+
+    //create new game with user inputed values
+    resetGame(xDim, yDim, difficulty);
+  };
+
   return (
     <GameForm onSubmit={handleSubmit}>
+      <label id='xDim'>Height</label>
       <select
-        id='xdim'
-        name='xdim'
+        id='xDim'
+        name='xDim'
         value={inputValues.xDim}
         onChange={handleChange}>
         <option key={5} value={5}>
@@ -71,9 +85,10 @@ export const GameInputForm: React.FC<Props> = ({ handleSubmit }) => {
           20
         </option>
       </select>
+      <label id='yDim'>Width</label>
       <select
-        id='ydim'
-        name='ydim'
+        id='yDim'
+        name='yDim'
         value={inputValues.yDim}
         onChange={handleChange}>
         <option key={5} value={5}>
@@ -89,6 +104,7 @@ export const GameInputForm: React.FC<Props> = ({ handleSubmit }) => {
           20
         </option>
       </select>
+      <label id='difficulty'>Difficulty</label>
       <select
         id='difficulty'
         name='difficulty'
@@ -104,6 +120,7 @@ export const GameInputForm: React.FC<Props> = ({ handleSubmit }) => {
           Hard
         </option>
       </select>
+      <button type='submit'>Start New Game</button>
     </GameForm>
   );
 };

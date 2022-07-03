@@ -5,14 +5,17 @@ import Swal from 'sweetalert2';
 import GameCell from './GameCell';
 import uuid from 'react-native-uuid';
 import { playSound } from '../sounds';
+import { GameInputForm } from './GameInputForm';
 
-//size of board , Nx x Ny
+//initial default values size of board , Nx x Ny
 const Nx: number = 15;
 const Ny: number = 20;
 const difficulty: string = 'easy'; // diffculting of game, determines % of mines
 
-// the gameBoard is that create the gameBoard
-// this contains following functions
+// the gameBoard object creates the static gameBoard
+let gameBoard: Board = new Board(Nx, Ny, difficulty);
+type Game = boolean[][];
+// its contains the following functions
 /* 
   // define methods
   // return of location x, y has a bomb
@@ -34,8 +37,6 @@ const difficulty: string = 'easy'; // diffculting of game, determines % of mines
   revealNeighbors(i: number, j: number, state: Game, boardState: Board): void 
 
  */
-let gameBoard: Board = new Board(Nx, Ny, difficulty);
-type Game = boolean[][];
 
 // props for GameGrid Styled Component
 interface GridProps {
@@ -158,9 +159,13 @@ const App: React.FC = () => {
   }
 
   // reset the board
-  function resetGame() {
+  function resetGame(
+    xdim: number = 15,
+    ydim: number = 20,
+    level: string = 'easy'
+  ): void {
     //generate new gameboard
-    gameBoard = new Board(Nx, Ny, difficulty);
+    gameBoard = new Board(xdim, ydim, level);
     // play start sound
 
     playSound('start');
@@ -209,6 +214,7 @@ const App: React.FC = () => {
           );
         })}
       </GameGrid>
+      <GameInputForm resetGame={resetGame} />
     </>
   );
 };
