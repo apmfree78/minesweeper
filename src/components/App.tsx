@@ -37,6 +37,7 @@ const difficulty: string = 'easy'; // diffculting of game, determines % of mines
 let gameBoard: Board = new Board(Nx, Ny, difficulty);
 type Game = boolean[][];
 
+// props for GameGrid Styled Component
 interface GridProps {
   width: number;
   height: number;
