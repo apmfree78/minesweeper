@@ -1,20 +1,6 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
-import styled, { StyledComponent } from 'styled-components';
-
-// Input Form for player to choose size and difficulty and start new game
-const GameForm: StyledComponent<'form', any, {}, never> = styled.form`
-  /* background-color: #ccc; */
-  padding: 10px 0px 10px 0px;
-  margin-bottom: 10px;
-  border: 5px solid aqua;
-  color: orange;
-  font-family: 'emulogicregular';
-  font-size: 14px;
-  font-weight: bolder;
-  display: flex;
-  justify-content: space-around;
-  align-content: center;
-`;
+import { GameForm } from '../library/gameStyled';
+import { gameSizeOptions, gameLevels } from '../library/gameSpecs';
 
 interface Props {
   // handleSubmit: (e: FormEvent) => void;
@@ -27,6 +13,11 @@ interface Inputs {
   difficulty: string;
 }
 
+// This is simple inline form at bottom of game that allows player
+// to customize height , width, and difficulty of game
+// it has 1 prop: resetGame, which allows this component
+// to launch a new game with user specified customization
+// using resetGame functional prop
 export const GameInputForm: React.FC<Props> = ({ resetGame }) => {
   const [inputValues, setInputValues] = useState<Inputs>({
     xDim: 15,
@@ -34,6 +25,7 @@ export const GameInputForm: React.FC<Props> = ({ resetGame }) => {
     difficulty: 'easy',
   });
 
+  // update state 'inputValues' when player selects dropdown option
   const handleChange = (event: ChangeEvent<HTMLSelectElement>): void => {
     let { value, name } = event.currentTarget;
     let numValue: number;
@@ -54,6 +46,7 @@ export const GameInputForm: React.FC<Props> = ({ resetGame }) => {
     }
   };
 
+  // take user input and launch new game
   const handleSubmit = (event: FormEvent): void => {
     // prevent default behavior
     event.preventDefault();
@@ -80,18 +73,13 @@ export const GameInputForm: React.FC<Props> = ({ resetGame }) => {
           name='xDim'
           value={inputValues.xDim}
           onChange={handleChange}>
-          <option key={5} value={5}>
-            5
-          </option>
-          <option key={10} value={10}>
-            10
-          </option>
-          <option key={15} value={15}>
-            15
-          </option>
-          <option key={20} value={20}>
-            20
-          </option>
+          {gameSizeOptions.map((size) => {
+            return (
+              <option key={size} value={size}>
+                {size}
+              </option>
+            );
+          })}
         </select>
       </label>
       <label id='yDim'>
@@ -107,18 +95,13 @@ export const GameInputForm: React.FC<Props> = ({ resetGame }) => {
           name='yDim'
           value={inputValues.yDim}
           onChange={handleChange}>
-          <option key={5} value={5}>
-            5
-          </option>
-          <option key={10} value={10}>
-            10
-          </option>
-          <option key={15} value={15}>
-            15
-          </option>
-          <option key={20} value={20}>
-            20
-          </option>
+          {gameSizeOptions.map((size) => {
+            return (
+              <option key={size} value={size}>
+                {size}
+              </option>
+            );
+          })}
         </select>
       </label>
       <label id='difficulty'>
@@ -134,15 +117,13 @@ export const GameInputForm: React.FC<Props> = ({ resetGame }) => {
           name='difficulty'
           value={inputValues.difficulty}
           onChange={handleChange}>
-          <option key='easy' value='easy'>
-            Easy
-          </option>
-          <option key='medium' value='medium'>
-            Medium
-          </option>
-          <option key='hard' value='hard'>
-            Hard
-          </option>
+          {gameLevels.map((level) => {
+            return (
+              <option key={level} value={level}>
+                {level}
+              </option>
+            );
+          })}
         </select>
       </label>
       <button

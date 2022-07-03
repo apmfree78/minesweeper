@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Board from './gameBoard';
-import styled, { StyledComponent } from 'styled-components';
+import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import GameCell from './GameCell';
 import uuid from 'react-native-uuid';
-import { playSound } from '../sounds';
+import { playSound } from '../library/sounds';
 import { GameInputForm } from './GameInputForm';
+import { ScoreBoard } from '../library/gameStyled';
 
 //initial default values size of board , Nx x Ny
 const Nx: number = 15;
@@ -59,21 +60,6 @@ const GameGrid = styled.div<GridProps>`
   display: grid;
   grid-template-rows: repeat(${(p) => p.xdim}, 1fr);
   grid-template-columns: repeat(${(p) => p.ydim}, 1fr);
-`;
-
-// score board shows the score, # of mines, and button to restart game
-const ScoreBoard: StyledComponent<'div', any, {}, never> = styled.div`
-  /* background-color: #ccc; */
-  padding: 7px 0px 5px 0px;
-  margin-bottom: 10px;
-  border: 5px solid aqua;
-  color: orange;
-  font-family: 'emulogicregular';
-  font-size: 18px;
-  font-weight: bolder;
-  display: flex;
-  justify-content: space-around;
-  align-content: center;
 `;
 
 const App: React.FC = () => {
@@ -161,7 +147,8 @@ const App: React.FC = () => {
     }
   }
 
-  // reset the board
+  // reset the board with default or user provided
+  // custom dimensions and difficulty
   function resetGame(
     xdim: number = gameBoard.xDim,
     ydim: number = gameBoard.yDim,

@@ -1,4 +1,4 @@
-import styled, { StyledComponent } from 'styled-components';
+import { CellBox, RevealBox } from '../library/gameStyled';
 
 interface Props {
   x: number;
@@ -8,26 +8,6 @@ interface Props {
   adjacentBombs: number;
   revealCell: (x: number, y: number) => void;
 }
-
-const CellBox: StyledComponent<'div', any, {}, never> = styled.div`
-  /*   height: 100px;
-    width: 100px; */
-  background-color: #62488f;
-  margin: 1px;
-  border-radius: 2px;
-  border: 0.15vmin solid orange;
-  color: black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 2vmin;
-  font-weight: bolder;
-`;
-
-const RevealBox = styled(CellBox)`
-  background-color: #ccc;
-  border: 0.15vmin solid black;
-`;
 
 //GameCell button - reusable component
 const GameCell: React.FC<Props> = ({
