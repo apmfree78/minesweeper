@@ -66,61 +66,72 @@ export const GameInputForm: React.FC<Props> = ({ resetGame }) => {
 
   return (
     <GameForm onSubmit={handleSubmit}>
-      <label id='xDim'>Height</label>
-      <select
-        id='xDim'
-        name='xDim'
-        value={inputValues.xDim}
-        onChange={handleChange}>
-        <option key={5} value={5}>
-          5
-        </option>
-        <option key={10} value={10}>
-          10
-        </option>
-        <option key={15} value={15}>
-          15
-        </option>
-        <option key={20} value={20}>
-          20
-        </option>
-      </select>
-      <label id='yDim'>Width</label>
-      <select
-        id='yDim'
-        name='yDim'
-        value={inputValues.yDim}
-        onChange={handleChange}>
-        <option key={5} value={5}>
-          5
-        </option>
-        <option key={10} value={10}>
-          10
-        </option>
-        <option key={15} value={15}>
-          15
-        </option>
-        <option key={20} value={20}>
-          20
-        </option>
-      </select>
-      <label id='difficulty'>Difficulty</label>
-      <select
-        id='difficulty'
-        name='difficulty'
-        value={inputValues.difficulty}
-        onChange={handleChange}>
-        <option key='easy' value='easy'>
-          Easy
-        </option>
-        <option key='medium' value='medium'>
-          Medium
-        </option>
-        <option key='hard' value='hard'>
-          Hard
-        </option>
-      </select>
-      <button type='submit'>Start New Game</button>
+      <label id='xDim'>
+        Height
+        <select
+          style={{ marginLeft: 12, padding: 5 }}
+          id='xDim'
+          name='xDim'
+          value={inputValues.xDim}
+          onChange={handleChange}>
+          <option key={5} value={5}>
+            5
+          </option>
+          <option key={10} value={10}>
+            10
+          </option>
+          <option key={15} value={15}>
+            15
+          </option>
+          <option key={20} value={20}>
+            20
+          </option>
+        </select>
+      </label>
+      <label id='yDim'>
+        Width
+        <select
+          style={{ marginLeft: 12, padding: 5 }}
+          id='yDim'
+          name='yDim'
+          value={inputValues.yDim}
+          onChange={handleChange}>
+          <option key={5} value={5}>
+            5
+          </option>
+          <option key={10} value={10}>
+            10
+          </option>
+          <option key={15} value={15}>
+            15
+          </option>
+          <option key={20} value={20}>
+            20
+          </option>
+        </select>
+      </label>
+      <label id='difficulty'>
+        Difficulty
+        <select
+          style={{ marginLeft: 12, padding: 5 }}
+          id='difficulty'
+          name='difficulty'
+          value={inputValues.difficulty}
+          onChange={handleChange}>
+          <option key='easy' value='easy'>
+            Easy
+          </option>
+          <option key='medium' value='medium'>
+            Medium
+          </option>
+          <option key='hard' value='hard'>
+            Hard
+          </option>
+        </select>
+      </label>
+      <button type='submit' style={{ padding: 2 }}>
+        Start New Game
+      </button>
     </GameForm>
   );
 };
