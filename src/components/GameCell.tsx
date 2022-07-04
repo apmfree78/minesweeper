@@ -42,21 +42,27 @@ const GameCell: React.FC<Props> = ({
   if (cellState.isRevealed) {
     //check if cell has mine
     if (cellState.hasMine) {
-      displayValue = 'B';
+      return (
+        <CellBox>
+          <img alt='B' width={20} src='boom.png' />
+        </CellBox>
+      );
     } else {
       // no mine, show # of adjacent bombs
       displayValue = cellState.adjacentMines.toString();
+      // display revealed cell
+      return <RevealBox>{displayValue}</RevealBox>;
     }
-    // display revealed cell
-    return <RevealBox>{displayValue}</RevealBox>;
   }
   // if player has flagged cell
-  else if (cellState.isFlagged) displayValue = 'X';
-  return (
-    <CellBox onClick={handleClick} onContextMenu={handleClick}>
-      {displayValue}
-    </CellBox>
-  );
+  else if (cellState.isFlagged) {
+    return (
+      <CellBox onClick={handleClick} onContextMenu={handleClick}>
+        <img alt='X' width={17} src='bomb.png' />
+      </CellBox>
+    );
+  }
+  return <CellBox onClick={handleClick} onContextMenu={handleClick} />;
 };
 
 export default GameCell;
