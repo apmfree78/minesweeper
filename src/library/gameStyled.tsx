@@ -49,7 +49,6 @@ interface GameFormProps {
 
 // Input Form for player to choose size and difficulty and start new game
 const GameForm = styled.form<GameFormProps>`
-  /* background-color: #ccc; */
   width: ${(p) => p.width}vmin;
   height: auto;
   padding: 1vmin 0vmin 1vmin 0vmin;
@@ -65,6 +64,7 @@ const GameForm = styled.form<GameFormProps>`
   align-content: center;
 `;
 
+// css for game cell box (hidden)
 const CellBox: StyledComponent<'div', any, {}, never> = styled.div`
   /*   height: 100px;
     width: 100px; */
@@ -80,6 +80,8 @@ const CellBox: StyledComponent<'div', any, {}, never> = styled.div`
   font-weight: bolder;
 `;
 
+// revealed cell takes properties of standard CellBox with different
+// background color and border
 const RevealBox = styled(CellBox)`
   background-color: #ccc;
   border: 0.15vmin solid black;

@@ -3,7 +3,6 @@ import { GameForm } from '../library/gameStyled';
 import { gameSizeOptions, gameLevels } from '../library/gameSpecs';
 
 interface Props {
-  // handleSubmit: (e: FormEvent) => void;
   width: number;
   resetGame: (xDim: number, yDim: number, level: string) => void;
 }
@@ -32,14 +31,17 @@ export const GameInputForm: React.FC<Props> = ({ resetGame, width }) => {
     let numValue: number;
     // console.log(name);
 
+    // if event is a number, must change type
     if (name === 'xDim' || name === 'yDim') {
       numValue = parseInt(value);
 
+      // updating input state
       setInputValues({
         ...inputValues,
         [name]: numValue,
       });
     } else {
+      // updating input state
       setInputValues({
         ...inputValues,
         [name]: value,
@@ -59,6 +61,7 @@ export const GameInputForm: React.FC<Props> = ({ resetGame, width }) => {
     resetGame(xDim, yDim, difficulty);
   };
 
+  // return inline input form at bottom of game
   return (
     <GameForm width={width} onSubmit={handleSubmit}>
       <label id='xDim'>

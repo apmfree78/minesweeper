@@ -116,17 +116,6 @@ export default class Board {
     ];
   };
 
-  // define methods
-  // return of location x, y has a bomb
-  hasMine(x: number, y: number): boolean {
-    return this.gameBoard[x][y].hasMine;
-  }
-
-  // number of adjacent cells that contain mines
-  adjacentMines(x: number, y: number): number {
-    return this.gameBoard[x][y].adjacentMines;
-  }
-
   // total number of mines on the board
   totalMineCount() {
     return this.numberOfMines;
@@ -149,12 +138,12 @@ export default class Board {
         y >= 0 &&
         x < this.xDim &&
         y < this.yDim &&
-        !this.hasMine(x, y) &&
+        !state[x][y].hasMine &&
         !state[x][y].isRevealed
       ) {
         state[x][y].isRevealed = true;
         this.revealedCells++; //add to count of revealed cells
-        if (this.adjacentMines(x, y) === 0) this.revealNeighbors(x, y, state);
+        if (state[x][y].adjacentMines === 0) this.revealNeighbors(x, y, state);
       }
     }
   }
