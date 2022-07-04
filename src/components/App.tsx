@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import Board from './gameBoard';
-import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import GameCell from './GameCell';
 import uuid from 'react-native-uuid';
 import { playSound } from '../library/sounds';
 import { GameInputForm } from './GameInputForm';
-// import { ScoreBoard } from '../library/gameStyled';
+import { ScoreBoard, GameGrid } from '../library/gameStyled';
 
 //initial default values size of board , Nx x Ny
-const Nx: number = 20;
-const Ny: number = 15;
+const Nx: number = 15;
+const Ny: number = 20;
 const difficulty: string = 'easy'; // diffculting of game, determines % of mines
 
 // the gameBoard object creates the static gameBoard
@@ -38,49 +37,6 @@ type Game = boolean[][];
   revealNeighbors(i: number, j: number, state: Game, boardState: Board): void 
 
  */
-
-// props for GameGrid Styled Component
-interface GridProps {
-  width: number;
-  height: number;
-  xdim: number;
-  ydim: number;
-}
-interface ScoreBoardProps {
-  width: number;
-}
-
-// styled component for the game board, using CSS grid
-// with dynamic values
-const GameGrid = styled.div<GridProps>`
-  background-color: #ccc;
-  font-family: 'emulogicregular';
-  font-size: 0.1vmin;
-  width: ${(p) => p.width}vmin;
-  height: ${(p) => p.height}vmin;
-  /* width: ${gameBoard.yWidth}vmin;
-  height: ${gameBoard.xHeight}vmin; */
-  display: grid;
-  grid-template-rows: repeat(${(p) => p.xdim}, 1fr);
-  grid-template-columns: repeat(${(p) => p.ydim}, 1fr);
-`;
-
-// score board shows the score, # of mines, and button to restart game
-const ScoreBoard = styled.div<ScoreBoardProps>`
-  /* background-color: #ccc; */
-  width: ${(p) => p.width}vmin;
-  height: auto;
-  padding: 1vmin 0vmin 1vmin 0vmin;
-  margin-bottom: 1vmin;
-  border: 5px solid aqua;
-  color: orange;
-  font-family: 'emulogicregular';
-  font-size: 1.5vmin;
-  font-weight: bolder;
-  display: flex;
-  justify-content: space-around;
-  align-content: center;
-`;
 
 const App: React.FC = () => {
   const [gameState, setGameState] = useState<Game>(gameBoard.getInitialState());

@@ -2,30 +2,63 @@ import styled, { StyledComponent } from 'styled-components';
 
 // contains styled components for game
 
+// props for GameGrid Styled Component
+interface GridProps {
+  width: number;
+  height: number;
+  xdim: number;
+  ydim: number;
+}
+
+// styled component for the game board, using CSS grid
+// with dynamic values
+const GameGrid = styled.div<GridProps>`
+  background-color: #ccc;
+  font-family: 'emulogicregular';
+  font-size: 0.1vmin;
+  width: ${(p) => p.width}vmin;
+  height: ${(p) => p.height}vmin;
+  display: grid;
+  grid-template-rows: repeat(${(p) => p.xdim}, 1fr);
+  grid-template-columns: repeat(${(p) => p.ydim}, 1fr);
+`;
+
+interface ScoreBoardProps {
+  width: number;
+}
+
 // score board shows the score, # of mines, and button to restart game
-const ScoreBoard: StyledComponent<'div', any, {}, never> = styled.div`
+const ScoreBoard = styled.div<ScoreBoardProps>`
   /* background-color: #ccc; */
-  padding: 7px 0px 5px 0px;
-  margin-bottom: 10px;
+  width: ${(p) => p.width}vmin;
+  height: auto;
+  padding: 1vmin 0vmin 1vmin 0vmin;
+  margin-bottom: 1vmin;
   border: 5px solid aqua;
   color: orange;
   font-family: 'emulogicregular';
-  font-size: 18px;
+  font-size: 1.5vmin;
   font-weight: bolder;
   display: flex;
   justify-content: space-around;
   align-content: center;
 `;
 
+interface GameFormProps {
+  width: number;
+}
+
 // Input Form for player to choose size and difficulty and start new game
-const GameForm: StyledComponent<'form', any, {}, never> = styled.form`
+const GameForm = styled.form<GameFormProps>`
   /* background-color: #ccc; */
-  padding: 10px 0px 10px 0px;
-  margin-bottom: 10px;
+  width: ${(p) => p.width}vmin;
+  height: auto;
+  padding: 1vmin 0vmin 1vmin 0vmin;
+  margin-bottom: 1vmin;
   border: 5px solid aqua;
   color: orange;
   font-family: 'emulogicregular';
-  font-size: 14px;
+  font-size: 1vmin;
   font-weight: bolder;
   display: flex;
   justify-content: space-around;
@@ -52,4 +85,4 @@ const RevealBox = styled(CellBox)`
   border: 0.15vmin solid black;
 `;
 
-export { ScoreBoard, GameForm, CellBox, RevealBox };
+export { GameGrid, ScoreBoard, GameForm, CellBox, RevealBox };

@@ -1,6 +1,5 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
-// import { GameForm } from '../library/gameStyled';
-import styled from 'styled-components';
+import { GameForm } from '../library/gameStyled';
 import { gameSizeOptions, gameLevels } from '../library/gameSpecs';
 
 interface Props {
@@ -14,27 +13,6 @@ interface Inputs {
   yDim: number;
   difficulty: string;
 }
-
-interface GameForm {
-  width: number;
-}
-
-// Input Form for player to choose size and difficulty and start new game
-const GameForm = styled.form<GameForm>`
-  /* background-color: #ccc; */
-  width: ${(p) => p.width}vmin;
-  height: auto;
-  padding: 1vmin 0vmin 1vmin 0vmin;
-  margin-bottom: 1vmin;
-  border: 5px solid aqua;
-  color: orange;
-  font-family: 'emulogicregular';
-  font-size: 1vmin;
-  font-weight: bolder;
-  display: flex;
-  justify-content: space-around;
-  align-content: center;
-`;
 
 // This is simple inline form at bottom of game that allows player
 // to customize height , width, and difficulty of game
