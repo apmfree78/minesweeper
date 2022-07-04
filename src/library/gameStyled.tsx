@@ -55,6 +55,7 @@ const GameForm = styled.form<GameFormProps>`
   height: auto;
   padding: 1vmin 0vmin 1vmin 0vmin;
   margin-bottom: 1vmin;
+  margin-top: 0.5vmin;
   border: 5px solid aqua;
   color: orange;
   font-family: 'emulogicregular';

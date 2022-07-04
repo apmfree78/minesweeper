@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Board from './gameBoard';
 import Swal from 'sweetalert2';
 import GameCell from './GameCell';
-import uuid from 'react-native-uuid';
 import { playSound } from '../library/sounds';
 import { GameInputForm } from './GameInputForm';
 import { ScoreBoard, GameGrid } from '../library/gameStyled';
@@ -15,6 +14,14 @@ const difficulty: string = 'easy'; // diffculting of game, determines % of mines
 // the gameBoard object creates the static gameBoard
 let gameBoard: Board = new Board(Nx, Ny, difficulty);
 type Game = boolean[][];
+
+// interface for full cell state
+interface CellProp {
+  isFlagged: boolean; //true => cell is flagged, false => not flagged
+  isRevealed: boolean; //true => cell is revealed, false => hidden
+  hasMine: boolean; // true => has a mine, false => no mine
+  adjacentMines: number; // number of neighors that have a mine
+}
 // its contains the following functions
 /* 
   // define methods
@@ -39,7 +46,13 @@ type Game = boolean[][];
  */
 
 const App: React.FC = () => {
+  // gameState[x][y] is true if that game cell is revealed, false if it's hidden
   const [gameState, setGameState] = useState<Game>(gameBoard.getInitialState());
+  // cellFlagged[x][y] is true if the game cell is flagged by player as potential mine
+  // cellFlagged[x][y] is false if game cell is not flagged
+  const [cellFlagged, setCellFlagged] = useState<Game>(
+    gameBoard.getInitialState()
+  );
   const [gameScore, setGameScore] = useState<number>(0);
 
   // reveals game cells after they are clicked by player
@@ -123,6 +136,24 @@ const App: React.FC = () => {
     }
   }
 
+  function flagCell(x: number, y: number): void {
+    // check to make sure cell is no revealed already,
+    // because only hidden cells can be flagged
+    if (!gameState[x][y]) {
+      //saving copy of flag state
+      const cellFlagState = JSON.parse(JSON.stringify(cellFlagged));
+
+      //if cell is no flagged , flag it
+      // if cell is already flag, unflag it
+      if (!cellFlagged[x][y]) {
+        cellFlagState[x][y] = true;
+      } else cellFlagState[x][y] = false;
+
+      // update state
+      setCellFlagged(cellFlagState);
+    }
+  }
+
   // reset the board with default or user provided
   // custom dimensions and difficulty
   function resetGame(
@@ -138,13 +169,16 @@ const App: React.FC = () => {
 
     // reset game state with all cells hidden
     setGameState(gameBoard.getInitialState());
+    setCellFlagged(gameBoard.getInitialState());
   }
 
   // play sound at start of game
   useEffect(() => {
-    console.log('play start sound');
     playSound('start');
   }, []);
+
+  //deconstruct gameboard state
+  const { xHeight, yWidth, xDim, yDim } = gameBoard;
 
   return (
     <>
@@ -160,24 +194,27 @@ const App: React.FC = () => {
           Restart Game
         </button>
       </ScoreBoard>
-      <GameGrid
-        height={gameBoard.xHeight}
-        width={gameBoard.yWidth}
-        xdim={gameBoard.xDim}
-        ydim={gameBoard.yDim}>
+      <GameGrid height={xHeight} width={yWidth} xdim={xDim} ydim={yDim}>
         {gameState.map((rows, x) => {
           return (
             <>
               {rows.map((cell, y) => {
+                //extracting cell state
+                const cellState: CellProp = {
+                  isRevealed: gameState[x][y],
+                  isFlagged: cellFlagged[x][y],
+                  hasMine: gameBoard.hasMine(x, y),
+                  adjacentMines: gameBoard.adjacentMines(x, y),
+                };
+
                 return (
                   <GameCell
-                    key={`${uuid.v4()}`}
+                    key={Math.random()}
                     x={x}
                     y={y}
-                    hasMine={gameBoard.hasMine(x, y)}
-                    isRevealed={gameState[x][y]}
-                    adjacentBombs={gameBoard.adjacentMines(x, y)}
+                    cellState={cellState}
                     revealCell={revealCell}
+                    flagCell={flagCell}
                   />
                 );
               })}
