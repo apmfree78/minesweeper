@@ -1,10 +1,11 @@
 interface Cell {
+  isFlagged: boolean; //true => cell is flagged, false => not flagged
+  isRevealed: boolean; //true => cell is revealed, false => hidden
   hasMine: boolean; // true => has a mine, false => no mine
   adjacentMines: number; // number of neighors that have a mine
 }
 
 type Cells = Cell[][];
-type Game = boolean[][];
 
 export default class Board {
   numberOfMines: number = 0; // number of mines on board
@@ -26,7 +27,7 @@ export default class Board {
   gameBoard: Cells = [[]];
 
   // initial state where false => cell hidden, true => cell is revealed
-  intialGameState: boolean[][] = [[]];
+  // intialGameState: Cells = [[]];
 
   constructor(Nx: number, Ny: number, difficulty: string = 'easy') {
     let frequency: number = 0.1; // easy frequency setting
@@ -67,7 +68,6 @@ export default class Board {
     // all setting gameInitalState =>
     // true => cell is revealed, false => cell is hidden
     for (let i = 0; i < Nx; i++) {
-      this.intialGameState[i] = [];
       for (let j = 0; j < Ny; j++) {
         // determine surround coordinates of cell i,j
         const surroundingCells: number[][] = this.surroundingCellCoordinates(
@@ -81,15 +81,13 @@ export default class Board {
 
           // increase mine counter
           this.numberOfMines++;
-          console.log('mine in place');
+          // console.log('mine in place');
           // updating surrounding mine count
           for (const [x, y] of surroundingCells) {
             if (x >= 0 && y >= 0 && x < Nx && y < Ny)
               this.gameBoard[x][y].adjacentMines++;
           }
         } else this.gameBoard[i][j].hasMine = false;
-        // setting gameInitialState to all false
-        this.intialGameState[i][j] = false;
       }
     }
   }
@@ -99,6 +97,8 @@ export default class Board {
     return {
       hasMine: false, // true => has a mine, false => no mine
       adjacentMines: 0, // number of neighors that have a mine
+      isFlagged: false, //true => cell is flagged, false => not flagged
+      isRevealed: false, //true => cell is revealed, false => hidden
     };
   }
 
@@ -122,12 +122,6 @@ export default class Board {
     return this.gameBoard[x][y].hasMine;
   }
 
-  // return intial state of board , NxN boolean matrix
-  // where all elements are false (ie hidden)
-  getInitialState(): boolean[][] {
-    return this.intialGameState;
-  }
-
   // number of adjacent cells that contain mines
   adjacentMines(x: number, y: number): number {
     return this.gameBoard[x][y].adjacentMines;
@@ -145,7 +139,7 @@ export default class Board {
 
   // recursive function to reveal each neighor that does not contain
   // a bomb. Neighbors are ALL surround cells
-  revealNeighbors(i: number, j: number, state: Game): void {
+  revealNeighbors(i: number, j: number, state: Cells): void {
     // determine surround coordinates of cell i,j
     const surroundingCells: number[][] = this.surroundingCellCoordinates(i, j);
 
@@ -156,9 +150,9 @@ export default class Board {
         x < this.xDim &&
         y < this.yDim &&
         !this.hasMine(x, y) &&
-        !state[x][y]
+        !state[x][y].isRevealed
       ) {
-        state[x][y] = true;
+        state[x][y].isRevealed = true;
         this.revealedCells++; //add to count of revealed cells
         if (this.adjacentMines(x, y) === 0) this.revealNeighbors(x, y, state);
       }

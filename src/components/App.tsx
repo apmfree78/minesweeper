@@ -11,17 +11,18 @@ const Nx: number = 15;
 const Ny: number = 20;
 const difficulty: string = 'easy'; // diffculting of game, determines % of mines
 
-// the gameBoard object creates the static gameBoard
-let gameBoard: Board = new Board(Nx, Ny, difficulty);
-type Game = boolean[][];
-
 // interface for full cell state
-interface CellProp {
+interface Cell {
   isFlagged: boolean; //true => cell is flagged, false => not flagged
   isRevealed: boolean; //true => cell is revealed, false => hidden
   hasMine: boolean; // true => has a mine, false => no mine
   adjacentMines: number; // number of neighors that have a mine
 }
+type Cells = Cell[][];
+
+// the game object creates the static game
+let game: Board = new Board(Nx, Ny, difficulty);
+
 // its contains the following functions
 /* 
   // define methods
@@ -46,13 +47,15 @@ interface CellProp {
  */
 
 const App: React.FC = () => {
-  // gameState[x][y] is true if that game cell is revealed, false if it's hidden
-  const [gameState, setGameState] = useState<Game>(gameBoard.getInitialState());
-  // cellFlagged[x][y] is true if the game cell is flagged by player as potential mine
-  // cellFlagged[x][y] is false if game cell is not flagged
-  const [cellFlagged, setCellFlagged] = useState<Game>(
-    gameBoard.getInitialState()
-  );
+  // cellState[x][y] contains the data on the state of cell at x,y
+  // as defined in Cell interface :
+  /*  interface Cell {
+    isFlagged: boolean; //true => cell is flagged, false => not flagged
+    isRevealed: boolean; //true => cell is revealed, false => hidden
+    hasMine: boolean; // true => has a mine, false => no mine
+    adjacentMines: number; // number of neighors that have a mine
+  } */
+  const [cellState, setCellState] = useState<Cells>(game.gameBoard);
   const [gameScore, setGameScore] = useState<number>(0);
 
   // reveals game cells after they are clicked by player
@@ -60,18 +63,18 @@ const App: React.FC = () => {
   // process for neighboring cells, recursively
   function revealCell(x: number, y: number): void {
     // checking to make sure cell is not revealed
-    if (!gameState[x][y]) {
+    if (!cellState[x][y].isRevealed) {
       // saving cell state
-      const newGameState = JSON.parse(JSON.stringify(gameState));
-      newGameState[x][y] = true; //this cell is now revealed! :)
-      gameBoard.revealedCells++; //increment number of revealed cells
+      const newCellState: Cells = JSON.parse(JSON.stringify(cellState));
+      newCellState[x][y].isRevealed = true; //this cell is now revealed! :)
+      game.revealedCells++; //increment number of revealed cells
 
       // checking if there is a mine
-      if (gameBoard.hasMine(x, y)) {
+      if (cellState[x][y].hasMine) {
         // THERE IS A MINE
         // Player has LOST GAME
         playSound('bomb');
-        setGameState(newGameState);
+        setCellState(newCellState);
         setGameScore(0);
 
         // message
@@ -92,25 +95,24 @@ const App: React.FC = () => {
         setTimeout(resetGame, 5000); //restart game
       } else {
         // no bomb found , PLEW!
-        // revealing cell
-        newGameState[x][y] = true;
+
         // play beeping sound
         playSound('reveal');
 
         //set neighboring cells that have no bombs to true
         // this function will change new game state with updated
         // state with all revealed cells (ie cells set to true)
-        if (gameBoard.adjacentMines(x, y) === 0)
-          gameBoard.revealNeighbors(x, y, newGameState);
-        setGameState(newGameState);
+        if (cellState[x][y].adjacentMines === 0)
+          game.revealNeighbors(x, y, newCellState);
+        setCellState(newCellState);
 
         // check if player has WON game
         // if total cells === total # of bombs + cells revealed, player has WON!
         if (
-          gameBoard.totalCellCount() ===
-          gameBoard.totalMineCount() + gameBoard.revealedCells
+          game.totalCellCount() ===
+          game.totalMineCount() + game.revealedCells
         ) {
-          setGameScore(gameBoard.totalCellCount());
+          setGameScore(game.totalCellCount());
 
           // Player has won, success message + sound
           // sound
@@ -130,7 +132,7 @@ const App: React.FC = () => {
           setTimeout(resetGame, 3000); //restart game
         } else {
           // update score
-          setGameScore(gameBoard.revealedCells);
+          setGameScore(game.revealedCells);
         }
       }
     }
@@ -139,37 +141,36 @@ const App: React.FC = () => {
   function flagCell(x: number, y: number): void {
     // check to make sure cell is no revealed already,
     // because only hidden cells can be flagged
-    if (!gameState[x][y]) {
+    if (!cellState[x][y].isRevealed) {
       //saving copy of flag state
-      const cellFlagState = JSON.parse(JSON.stringify(cellFlagged));
+      const newCellState: Cells = JSON.parse(JSON.stringify(cellState));
 
       //if cell is no flagged , flag it
       // if cell is already flag, unflag it
-      if (!cellFlagged[x][y]) {
-        cellFlagState[x][y] = true;
-      } else cellFlagState[x][y] = false;
+      if (!cellState[x][y].isFlagged) {
+        newCellState[x][y].isFlagged = true;
+      } else newCellState[x][y].isFlagged = false;
 
       // update state
-      setCellFlagged(cellFlagState);
+      setCellState(newCellState);
     }
   }
 
   // reset the board with default or user provided
   // custom dimensions and difficulty
   function resetGame(
-    xdim: number = gameBoard.xDim,
-    ydim: number = gameBoard.yDim,
-    level: string = gameBoard.difficulty
+    xdim: number = game.xDim,
+    ydim: number = game.yDim,
+    level: string = game.difficulty
   ): void {
-    //generate new gameboard
-    gameBoard = new Board(xdim, ydim, level);
+    //generate new game
+    game = new Board(xdim, ydim, level);
     // play start sound
 
     playSound('start');
 
     // reset game state with all cells hidden
-    setGameState(gameBoard.getInitialState());
-    setCellFlagged(gameBoard.getInitialState());
+    setCellState(game.gameBoard);
   }
 
   // play sound at start of game
@@ -177,16 +178,14 @@ const App: React.FC = () => {
     playSound('start');
   }, []);
 
-  //deconstruct gameboard state
-  const { xHeight, yWidth, xDim, yDim } = gameBoard;
+  //deconstruct game state
+  const { xHeight, yWidth, xDim, yDim } = game;
 
   return (
     <>
-      <ScoreBoard width={gameBoard.yWidth}>
+      <ScoreBoard width={yWidth}>
         <span style={{ paddingTop: 4 }}>SCORE: {gameScore}</span>
-        <span style={{ paddingTop: 4 }}>
-          MINES: {gameBoard.totalMineCount()}
-        </span>
+        <span style={{ paddingTop: 4 }}>MINES: {game.totalMineCount()}</span>
         <button
           type='submit'
           style={{ borderWidth: 5, borderColor: '#CCC' }}
@@ -195,24 +194,16 @@ const App: React.FC = () => {
         </button>
       </ScoreBoard>
       <GameGrid height={xHeight} width={yWidth} xdim={xDim} ydim={yDim}>
-        {gameState.map((rows, x) => {
+        {cellState.map((rows, x) => {
           return (
             <>
               {rows.map((cell, y) => {
-                //extracting cell state
-                const cellState: CellProp = {
-                  isRevealed: gameState[x][y],
-                  isFlagged: cellFlagged[x][y],
-                  hasMine: gameBoard.hasMine(x, y),
-                  adjacentMines: gameBoard.adjacentMines(x, y),
-                };
-
                 return (
                   <GameCell
                     key={Math.random()}
                     x={x}
                     y={y}
-                    cellState={cellState}
+                    cellState={cellState[x][y]}
                     revealCell={revealCell}
                     flagCell={flagCell}
                   />
@@ -222,7 +213,7 @@ const App: React.FC = () => {
           );
         })}
       </GameGrid>
-      <GameInputForm width={gameBoard.yWidth} resetGame={resetGame} />
+      <GameInputForm width={yWidth} resetGame={resetGame} />
     </>
   );
 };

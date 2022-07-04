@@ -14,7 +14,7 @@ interface GridProps {
 // with dynamic values
 const GameGrid = styled.div<GridProps>`
   background-color: #ccc;
-  font-family: 'emulogicregular';
+  font-family: 'emulogicregular'; /* rad 8-bit retro font */
   font-size: 0.1vmin;
   width: ${(p) => p.width}vmin;
   height: ${(p) => p.height}vmin;
@@ -29,7 +29,6 @@ interface ScoreBoardProps {
 
 // score board shows the score, # of mines, and button to restart game
 const ScoreBoard = styled.div<ScoreBoardProps>`
-  /* background-color: #ccc; */
   width: ${(p) => p.width}vmin;
   height: auto;
   padding: 1vmin 0vmin 1vmin 0vmin;
