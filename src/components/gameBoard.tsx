@@ -11,11 +11,12 @@ export default class Board {
   revealedCells: number = 0; // keeps track of number of revealed cells
   totalCells: number = 0; //total number of cells in the game;
 
-  // x and y dimensions + GameGrid dimensions
+  // x and y dimensions + GameGrid dimensions + scale
   xDim: number;
   yDim: number;
   xHeight: number;
   yWidth: number;
+  scaleFactor: number;
 
   //setting game difficulty , it's either 'easy' , 'medium' or 'hard
   difficulty: string;
@@ -30,9 +31,10 @@ export default class Board {
   constructor(Nx: number, Ny: number, difficulty: string = 'easy') {
     let frequency: number = 0.1; // easy frequency setting
 
-    // setting board dimensions
+    // setting board dimensions and scale
     this.xDim = Nx;
     this.yDim = Ny;
+    this.scaleFactor = 0.8;
 
     //setting difficulty
     this.difficulty = difficulty;
@@ -42,11 +44,11 @@ export default class Board {
 
     // setting GameGrid vmin dimensions
     if (Nx > Ny) {
-      this.xHeight = 100;
-      this.yWidth = Math.round((0.8 * (100 * Ny)) / Nx);
+      this.xHeight = Math.round(this.scaleFactor * 100);
+      this.yWidth = Math.round((this.scaleFactor * (100 * Ny)) / Nx);
     } else {
-      this.xHeight = Math.round((0.8 * 100 * Nx) / Ny);
-      this.yWidth = 100;
+      this.xHeight = Math.round((this.scaleFactor * 100 * Nx) / Ny);
+      this.yWidth = Math.round(this.scaleFactor * 100);
     }
 
     //checking if there is higher difficulting setting

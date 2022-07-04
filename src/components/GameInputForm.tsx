@@ -1,9 +1,11 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
-import { GameForm } from '../library/gameStyled';
+// import { GameForm } from '../library/gameStyled';
+import styled from 'styled-components';
 import { gameSizeOptions, gameLevels } from '../library/gameSpecs';
 
 interface Props {
   // handleSubmit: (e: FormEvent) => void;
+  width: number;
   resetGame: (xDim: number, yDim: number, level: string) => void;
 }
 
@@ -13,12 +15,33 @@ interface Inputs {
   difficulty: string;
 }
 
+interface GameForm {
+  width: number;
+}
+
+// Input Form for player to choose size and difficulty and start new game
+const GameForm = styled.form<GameForm>`
+  /* background-color: #ccc; */
+  width: ${(p) => p.width}vmin;
+  height: auto;
+  padding: 1vmin 0vmin 1vmin 0vmin;
+  margin-bottom: 1vmin;
+  border: 5px solid aqua;
+  color: orange;
+  font-family: 'emulogicregular';
+  font-size: 1vmin;
+  font-weight: bolder;
+  display: flex;
+  justify-content: space-around;
+  align-content: center;
+`;
+
 // This is simple inline form at bottom of game that allows player
 // to customize height , width, and difficulty of game
 // it has 1 prop: resetGame, which allows this component
 // to launch a new game with user specified customization
 // using resetGame functional prop
-export const GameInputForm: React.FC<Props> = ({ resetGame }) => {
+export const GameInputForm: React.FC<Props> = ({ resetGame, width }) => {
   const [inputValues, setInputValues] = useState<Inputs>({
     xDim: 15,
     yDim: 20,
@@ -59,7 +82,7 @@ export const GameInputForm: React.FC<Props> = ({ resetGame }) => {
   };
 
   return (
-    <GameForm onSubmit={handleSubmit}>
+    <GameForm width={width} onSubmit={handleSubmit}>
       <label id='xDim'>
         Height
         <select
