@@ -192,11 +192,17 @@ const App: React.FC = () => {
   return (
     <>
       <ScoreBoard width={yWidth}>
-        {!gameOver && (
+        {!gameOver ? (
           <>
             <span style={{ paddingTop: 4 }}>SCORE: {gameScore}</span>
             <span style={{ paddingTop: 4 }}>
               MINES: {game.totalMineCount() - game.flaggedMines}
+            </span>
+          </>
+        ) : (
+          <>
+            <span style={{ paddingTop: 4 }}>
+              GAME OVER! PLEASE PLAY AGAIN {`==>`}{' '}
             </span>
           </>
         )}
