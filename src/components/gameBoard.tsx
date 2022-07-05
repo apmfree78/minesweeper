@@ -11,6 +11,7 @@ export default class Board {
   numberOfMines: number = 0; // number of mines on board
   revealedCells: number = 0; // keeps track of number of revealed cells
   totalCells: number = 0; //total number of cells in the game;
+  flaggedMines: number = 0; // number of mines flagged by player
 
   // x and y dimensions + GameGrid dimensions + scale
   xDim: number;

@@ -29,7 +29,7 @@ interface ScoreBoardProps {
 
 // score board shows the score, # of mines, and button to restart game
 const ScoreBoard = styled.div<ScoreBoardProps>`
-  width: ${(p) => p.width}vmin;
+  width: ${(p) => 0.985 * p.width}vmin;
   height: auto;
   padding: 1vmin 0vmin 1vmin 0vmin;
   margin-bottom: 1vmin;
@@ -41,6 +41,9 @@ const ScoreBoard = styled.div<ScoreBoardProps>`
   display: flex;
   justify-content: space-around;
   align-content: center;
+  button {
+    font-family: 'emulogicregular';
+  }
 `;
 
 interface GameFormProps {
@@ -49,7 +52,7 @@ interface GameFormProps {
 
 // Input Form for player to choose size and difficulty and start new game
 const GameForm = styled.form<GameFormProps>`
-  width: ${(p) => p.width}vmin;
+  width: ${(p) => 0.985 * p.width}vmin;
   height: auto;
   padding: 1vmin 0vmin 1vmin 0vmin;
   margin-bottom: 1vmin;
@@ -62,6 +65,14 @@ const GameForm = styled.form<GameFormProps>`
   display: flex;
   justify-content: space-around;
   align-content: center;
+  button {
+    font-size: 1vmin;
+    font-family: 'emulogicregular';
+  }
+  select {
+    font-size: 1vmin;
+    font-family: 'emulogicregular';
+  }
 `;
 
 // css for game cell box (hidden)

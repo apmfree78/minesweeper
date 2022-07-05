@@ -1,10 +1,16 @@
 // beeping sound when player reveals a cells (and it's not a bomb)
-export function playSound(soundType: string): void {
+export async function playSound(soundType: string): Promise<void> {
   const gameSound: HTMLAudioElement = new Audio();
   let source = 'beep.wav'; //default
   let volume = 0.2; // default;
 
   switch (soundType) {
+    case 'click2':
+      source = 'click5.wav';
+      break;
+    case 'click':
+      source = 'click.wav';
+      break;
     case 'reveal':
       source = 'beep.wav';
       break;
@@ -25,5 +31,5 @@ export function playSound(soundType: string): void {
 
   gameSound.src = source;
   gameSound.volume = volume;
-  gameSound.play();
+  await gameSound.play();
 }

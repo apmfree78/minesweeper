@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 // import './index.css';
-import '../node_modules/bootstrap/scss/bootstrap.scss';
-import '../node_modules/bootstrap/scss/bootstrap-grid.scss';
+// import '../node_modules/bootstrap/scss/bootstrap.scss';
+// import '../node_modules/bootstrap/scss/bootstrap-grid.scss';
 import './css/style.css';
-import './css/switch.css';
+// import './css/switch.css';
 import App from './components/App';
 import reportWebVitals from './reportWebVitals';
 

@@ -97,7 +97,8 @@ const App: React.FC = () => {
         // no bomb found , PLEW!
 
         // play beeping sound
-        playSound('reveal');
+        // playSound('reveal');
+        playSound('click2');
 
         //set neighboring cells that have no bombs to true
         // this function will change new game state with updated
@@ -149,8 +150,12 @@ const App: React.FC = () => {
       // if cell is already flag, unflag it
       if (!cellState[x][y].isFlagged) {
         newCellState[x][y].isFlagged = true;
-      } else newCellState[x][y].isFlagged = false;
-
+        playSound('click');
+        game.flaggedMines++; //increment number of flaggedMines
+      } else {
+        newCellState[x][y].isFlagged = false;
+        game.flaggedMines--; //decrement number of flaggedMines
+      }
       // update state
       setCellState(newCellState);
     }
@@ -185,7 +190,9 @@ const App: React.FC = () => {
     <>
       <ScoreBoard width={yWidth}>
         <span style={{ paddingTop: 4 }}>SCORE: {gameScore}</span>
-        <span style={{ paddingTop: 4 }}>MINES: {game.totalMineCount()}</span>
+        <span style={{ paddingTop: 4 }}>
+          MINES: {game.totalMineCount() - game.flaggedMines}
+        </span>
         <button
           type='submit'
           style={{ borderWidth: 5, borderColor: '#CCC' }}
