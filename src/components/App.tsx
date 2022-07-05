@@ -57,6 +57,7 @@ const App: React.FC = () => {
   } */
   const [cellState, setCellState] = useState<Cells>(game.gameBoard);
   const [gameScore, setGameScore] = useState<number>(0);
+  const [gameOver, setGameOver] = useState<boolean>(false);
 
   // reveals game cells after they are clicked by player
   // if there are no surrounding mines, then repeats this
@@ -76,6 +77,7 @@ const App: React.FC = () => {
         playSound('bomb');
         setCellState(newCellState);
         setGameScore(0);
+        setGameOver(true);
 
         // message
         Swal.fire({
@@ -118,6 +120,7 @@ const App: React.FC = () => {
           // Player has won, success message + sound
           // sound
           playSound('win');
+          setGameOver(true);
           // message
           Swal.fire({
             position: 'top',
@@ -130,7 +133,7 @@ const App: React.FC = () => {
           }).then((result) => {
             if (result.isDenied) resetGame();
           });
-          setTimeout(resetGame, 3000); //restart game
+          // setTimeout(resetGame, 3000); //restart game
         } else {
           // update score
           setGameScore(game.revealedCells);
@@ -170,8 +173,8 @@ const App: React.FC = () => {
   ): void {
     //generate new game
     game = new Board(xdim, ydim, level);
+    setGameOver(false);
     // play start sound
-
     playSound('start');
 
     // reset game state with all cells hidden
@@ -189,10 +192,14 @@ const App: React.FC = () => {
   return (
     <>
       <ScoreBoard width={yWidth}>
-        <span style={{ paddingTop: 4 }}>SCORE: {gameScore}</span>
-        <span style={{ paddingTop: 4 }}>
-          MINES: {game.totalMineCount() - game.flaggedMines}
-        </span>
+        {!gameOver && (
+          <>
+            <span style={{ paddingTop: 4 }}>SCORE: {gameScore}</span>
+            <span style={{ paddingTop: 4 }}>
+              MINES: {game.totalMineCount() - game.flaggedMines}
+            </span>
+          </>
+        )}
         <button
           type='submit'
           style={{ borderWidth: 5, borderColor: '#CCC' }}
