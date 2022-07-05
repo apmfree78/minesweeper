@@ -92,7 +92,7 @@ const App: React.FC = () => {
         // pop up alert that game is lost
         // sound
         setTimeout(() => playSound('lost'), 1000);
-        setTimeout(resetGame, 5000); //restart game
+        // setTimeout(resetGame, 5000); //restart game
       } else {
         // no bomb found , PLEW!
 

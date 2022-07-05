@@ -70,12 +70,6 @@ export default class Board {
     // true => cell is revealed, false => cell is hidden
     for (let i = 0; i < Nx; i++) {
       for (let j = 0; j < Ny; j++) {
-        // determine surround coordinates of cell i,j
-        const surroundingCells: number[][] = this.surroundingCellCoordinates(
-          i,
-          j
-        );
-
         // placing mines on gameBoard
         if (Math.random() < frequency) {
           this.gameBoard[i][j].hasMine = true;
@@ -83,15 +77,31 @@ export default class Board {
           // increase mine counter
           this.numberOfMines++;
           // console.log('mine in place');
-          // updating surrounding mine count
-          for (const [x, y] of surroundingCells) {
-            if (x >= 0 && y >= 0 && x < Nx && y < Ny)
-              this.gameBoard[x][y].adjacentMines++;
-          }
         } else this.gameBoard[i][j].hasMine = false;
       }
     }
-  }
+
+    // determine adjacent mine count
+    for (let i = 0; i < Nx; i++) {
+      for (let j = 0; j < Ny; j++) {
+        // determine surround coordinates of cell i,j
+        const surroundingCells: number[][] = this.surroundingCellCoordinates(
+          i,
+          j
+        );
+        // number of surrounding mines
+        let surroundingMines: number = 0;
+
+        // updating surrounding mine count
+        for (const [x, y] of surroundingCells) {
+          if (x >= 0 && y >= 0 && x < Nx && y < Ny)
+            if (this.gameBoard[x][y].hasMine) surroundingMines++;
+        }
+        // update mine count of current cell in loop
+        this.gameBoard[i][j].adjacentMines = surroundingMines;
+      }
+    }
+  } // end of constructor
 
   // returns blank cell
   createBlankCell(): Cell {
