@@ -223,7 +223,7 @@ const App: React.FC = () => {
                     key={Math.random()}
                     x={x}
                     y={y}
-                    cellState={cellState[x][y]}
+                    cellState={cell}
                     revealCell={revealCell}
                     flagCell={flagCell}
                   />
