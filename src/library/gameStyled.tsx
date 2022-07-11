@@ -43,6 +43,7 @@ const ScoreBoard = styled.div<ScoreBoardProps>`
   align-content: center;
   button {
     font-family: 'emulogicregular';
+    font-size: 1.5vmin;
   }
 `;
 
